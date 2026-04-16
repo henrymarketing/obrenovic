@@ -46,7 +46,7 @@ theme:
   secondary: "#60A5FA"
   bg_mode: "light"
   card_style: "glass"
-  site_bg: "/images/orchidee.jpg"
+  site_bg: ""
   hero_bg: "/gallery/reception.jpg"
   hero_portrait: "/images/obrenovic-hero.jpg"
   hero_portrait_cutout: "/images/obrenovic-hero-transparent.png"
