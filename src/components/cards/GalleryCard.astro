@@ -27,6 +27,11 @@ const ui = {
 
 const count = config.gallery.length;
 const desktopLayout = count <= 3 ? 'grid3' : count <= 5 ? 'grid6' : 'masonry';
+
+function webpSrcSet(src: string, widths: number[]) {
+  const base = src.replace(/\.(jpg|png)$/, '');
+  return widths.map((w) => `${base}-${w}.webp ${w}w`).join(', ');
+}
 ---
 
 {viewport === 'mobile' ? (
@@ -43,15 +48,22 @@ const desktopLayout = count <= 3 ? 'grid3' : count <= 5 ? 'grid6' : 'masonry';
           {config.gallery.map((g) => (
             <div class="snap-start shrink-0 w-[92vw] max-w-[480px]">
               <div class="overflow-hidden rounded-3xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/5">
-                <img
-                  src={g.image}
-                  alt={t(g.alt, lang)}
-                  class="aspect-[4/3] w-full object-cover"
-                  width="800"
-                  height="600"
-                  loading="lazy"
-                  decoding="async"
-                />
+                <picture>
+                  <source
+                    type="image/webp"
+                    srcset={webpSrcSet(g.image, [480, 800])}
+                    sizes="(max-width: 768px) 92vw, 800px"
+                  />
+                  <img
+                    src={g.image}
+                    alt={t(g.alt, lang)}
+                    class="aspect-[4/3] w-full object-cover"
+                    width="800"
+                    height="600"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
               </div>
             </div>
           ))}
@@ -70,15 +82,18 @@ const desktopLayout = count <= 3 ? 'grid3' : count <= 5 ? 'grid6' : 'masonry';
           {config.gallery.map((g) => (
             <div class="group" data-animate>
               <div class="overflow-hidden rounded-2xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/5">
-                <img
-                  src={g.image}
-                  alt={t(g.alt, lang)}
-                  class="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  width="800"
-                  height="600"
-                  loading="lazy"
-                  decoding="async"
-                />
+                <picture>
+                  <source type="image/webp" srcset={webpSrcSet(g.image, [480, 800])} sizes="(max-width: 768px) 92vw, 33vw" />
+                  <img
+                    src={g.image}
+                    alt={t(g.alt, lang)}
+                    class="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    width="800"
+                    height="600"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
               </div>
             </div>
           ))}
@@ -90,15 +105,18 @@ const desktopLayout = count <= 3 ? 'grid3' : count <= 5 ? 'grid6' : 'masonry';
             return (
               <div class:list={['group', span]} data-animate>
                 <div class="overflow-hidden rounded-2xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/5">
-                  <img
-                    src={g.image}
-                    alt={t(g.alt, lang)}
-                    class="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    width="800"
-                    height="600"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <picture>
+                    <source type="image/webp" srcset={webpSrcSet(g.image, [480, 800])} sizes="(max-width: 768px) 92vw, 33vw" />
+                    <img
+                      src={g.image}
+                      alt={t(g.alt, lang)}
+                      class="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      width="800"
+                      height="600"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
                 </div>
               </div>
             );
@@ -109,18 +127,25 @@ const desktopLayout = count <= 3 ? 'grid3' : count <= 5 ? 'grid6' : 'masonry';
           {config.gallery.map((g, i) => (
             <div class="mb-6 break-inside-avoid group" data-animate style={`transition-delay: ${i * 60}ms;`}>
               <div class="overflow-hidden rounded-2xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/5">
-                <img
-                  src={g.image}
-                  alt={t(g.alt, lang)}
-                  class:list={[
-                    'w-full object-cover transition-transform duration-300 group-hover:scale-105',
-                    i % 2 === 0 ? 'aspect-[4/3]' : 'aspect-[3/4]',
-                  ]}
-                  width="800"
-                  height={i % 2 === 0 ? '600' : '1067'}
-                  loading="lazy"
-                  decoding="async"
-                />
+                <picture>
+                  <source
+                    type="image/webp"
+                    srcset={webpSrcSet(g.image, [480, 800])}
+                    sizes="(max-width: 768px) 92vw, 33vw"
+                  />
+                  <img
+                    src={g.image}
+                    alt={t(g.alt, lang)}
+                    class:list={[
+                      'w-full object-cover transition-transform duration-300 group-hover:scale-105',
+                      i % 2 === 0 ? 'aspect-[4/3]' : 'aspect-[3/4]',
+                    ]}
+                    width="800"
+                    height={i % 2 === 0 ? '600' : '1067'}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
               </div>
             </div>
           ))}

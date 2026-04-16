@@ -43,6 +43,9 @@ const mapsHref = `https://www.google.com/maps?q=${encodeURIComponent(
   `${config.location.street}, ${config.location.zip} ${config.location.city}`
 )}`;
 
+const logoBase = config.business.logo.replace(/\.(jpg|png)$/, '');
+const logoWebpSrcSet = (widths: number[]) => widths.map((w) => `${logoBase}-${w}.webp ${w}w`).join(', ');
+
 ---
 
 {viewport === 'mobile' ? (
@@ -57,15 +60,18 @@ const mapsHref = `https://www.google.com/maps?q=${encodeURIComponent(
 
     <div class="relative z-10 w-full px-6">
       <div class="mx-auto max-w-sm text-center">
-        <img
-          src={config.business.logo}
-          alt={`${config.business.name} Logo`}
-          class="mx-auto h-16 w-auto max-w-[85%] object-contain"
-          width="1200"
-          height="221"
-          loading="eager"
-          decoding="async"
-        />
+        <picture>
+          <source type="image/webp" srcset={logoWebpSrcSet([600, 1200])} sizes="(max-width: 768px) 85vw, 600px" />
+          <img
+            src={config.business.logo}
+            alt={`${config.business.name} Logo`}
+            class="mx-auto h-16 w-auto max-w-[85%] object-contain"
+            width="1200"
+            height="221"
+            loading="eager"
+            decoding="async"
+          />
+        </picture>
 
         <h1 class="mt-6 text-3xl font-bold tracking-tight" data-animate>
           {t(config.business.slogan, lang)}
@@ -132,15 +138,18 @@ const mapsHref = `https://www.google.com/maps?q=${encodeURIComponent(
   <section class="relative w-full py-20">
     <div class="mx-auto max-w-6xl px-8">
       <div class="mb-6 flex items-center justify-between gap-6">
-        <img
-          src={config.business.logo}
-          alt={`${config.business.name} Logo`}
-          class="h-12 w-auto max-w-[280px] object-contain"
-          width="1200"
-          height="221"
-          loading="eager"
-          decoding="async"
-        />
+        <picture>
+          <source type="image/webp" srcset={logoWebpSrcSet([600, 1200])} sizes="(max-width: 768px) 85vw, 280px" />
+          <img
+            src={config.business.logo}
+            alt={`${config.business.name} Logo`}
+            class="h-12 w-auto max-w-[280px] object-contain"
+            width="1200"
+            height="221"
+            loading="eager"
+            decoding="async"
+          />
+        </picture>
         <div class="flex items-center gap-3">
           <a
             href={desktopPrimaryHref}
