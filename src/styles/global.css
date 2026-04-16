@@ -2,6 +2,31 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+html {
+  color-scheme: light;
+}
+
+.dark html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-bg-alt);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading, serif);
+  color: var(--color-text-heading);
+}
+
+.dark h1,
+.dark h2,
+.dark h3 {
+  color: rgba(255, 255, 255, 0.92);
+}
+
 [data-animate] {
   /* Keep content visible for better mobile LCP (no "opacity:0" until JS). */
   opacity: 1;
@@ -104,18 +129,14 @@ details[open] summary ~ * {
 }
 
 .btn-primary {
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--color-primary) 55%, white),
-    var(--color-primary)
-  );
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
 }
 
 .btn-primary:hover {
   background: linear-gradient(
     135deg,
-    color-mix(in srgb, var(--color-primary) 48%, white),
-    color-mix(in srgb, var(--color-primary) 92%, black)
+    color-mix(in srgb, var(--color-primary) 92%, black),
+    color-mix(in srgb, var(--color-secondary) 92%, black)
   );
 }
 

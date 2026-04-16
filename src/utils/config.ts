@@ -37,6 +37,12 @@ export interface ClientConfig {
   theme: {
     primary: string;
     secondary: string;
+    accent?: string;
+    bg?: string;
+    bg_alt?: string;
+    text_heading?: string;
+    text_body?: string;
+    divider?: string;
     bg_mode: string;
     card_style: string;
     site_bg?: string;

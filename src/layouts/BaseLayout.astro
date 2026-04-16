@@ -35,13 +35,26 @@ const faqSchema = config.faq?.length ? generateFaqSchema(lang) : null;
 const gtagId = (config as any)?.analytics?.google?.gtag_id as string | undefined;
 
 const siteBg = config.theme.site_bg || '';
+
+const themeVars = {
+  primary: config.theme.primary,
+  secondary: config.theme.secondary,
+  accent: config.theme.accent ?? config.theme.secondary,
+  bg: config.theme.bg ?? '#FFFFFF',
+  bgAlt: config.theme.bg_alt ?? '#F7F8FA',
+  textHeading: config.theme.text_heading ?? '#0B1D33',
+  textBody: config.theme.text_body ?? '#3A3F47',
+  divider: config.theme.divider ?? '#E8EAED',
+  radius: config.theme.border_radius,
+  heroOverlay: config.theme.hero_overlay,
+};
 ---
 
 <!doctype html>
 <html
   lang={lang}
   class:list={['h-full', lockScroll ? 'md:overflow-hidden' : '', config.theme.bg_mode === 'dark' ? 'dark' : '']}
-  style={`--color-primary:${config.theme.primary};--color-secondary:${config.theme.secondary};--card-radius:${config.theme.border_radius};--hero-overlay:${config.theme.hero_overlay};`}
+  style={`--color-primary:${themeVars.primary};--color-secondary:${themeVars.secondary};--color-accent:${themeVars.accent};--color-bg:${themeVars.bg};--color-bg-alt:${themeVars.bgAlt};--color-text-heading:${themeVars.textHeading};--color-text-body:${themeVars.textBody};--color-divider:${themeVars.divider};--card-radius:${themeVars.radius};--hero-overlay:${themeVars.heroOverlay};--font-heading:\"Lora\",serif;`}
 >
   <head>
     <meta charset="utf-8" />
@@ -94,13 +107,25 @@ const siteBg = config.theme.site_bg || '';
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
     />
     <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&display=swap"
+    />
+    <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&display=swap"
       rel="stylesheet"
       media="print"
       onload="this.media='all'"
     />
     <noscript>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&display=swap" rel="stylesheet" />
     </noscript>
 
     {gtagId ? (
@@ -135,8 +160,9 @@ const siteBg = config.theme.site_bg || '';
 
   <body
     class:list={[
-      'h-full text-slate-900 dark:text-white antialiased font-sans relative',
-      siteBg ? '' : 'bg-slate-50 dark:bg-gradient-to-b dark:from-slate-950 dark:to-slate-900',
+      'h-full antialiased font-sans relative',
+      'text-[color:var(--color-text-body)] dark:text-white',
+      siteBg ? '' : 'bg-[color:var(--color-bg-alt)] dark:bg-gradient-to-b dark:from-slate-950 dark:to-slate-900',
       lockScroll ? 'md:overflow-hidden' : '',
     ]}
   >

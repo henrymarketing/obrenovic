@@ -42,8 +42,14 @@ emergency:
   phone: ""
 
 theme:
-  primary: "#5B6F98"
-  secondary: "#60A5FA"
+  primary: "#0A2F5A"
+  secondary: "#1E6FB5"
+  accent: "#0E8A7D"
+  bg: "#FFFFFF"
+  bg_alt: "#F7F8FA"
+  text_heading: "#0B1D33"
+  text_body: "#3A3F47"
+  divider: "#E8EAED"
   bg_mode: "light"
   card_style: "glass"
   site_bg: ""
