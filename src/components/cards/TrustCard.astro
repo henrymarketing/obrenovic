@@ -32,9 +32,9 @@ const ui = {
 };
 
 const reasons: Record<string, string>[] = (config.trust as any).reasons ?? [];
-const heroOrGallery = '/gallery/practice3.jpg';
+const heroOrGallery = '/gallery/chair.jpg';
 const heroOrGalleryAlt =
-  (config.gallery?.[2]?.alt ? t(config.gallery[2].alt, lang) : config.business.name) ||
+  (config.gallery?.[0]?.alt ? t(config.gallery[0].alt, lang) : config.business.name) ||
   config.business.name;
 ---
 

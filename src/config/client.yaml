@@ -53,7 +53,7 @@ theme:
   bg_mode: "light"
   card_style: "glass"
   site_bg: ""
-  hero_bg: "/gallery/reception.jpg"
+  hero_bg: "/gallery/chair.jpg"
   hero_portrait: "/images/obrenovic-hero.jpg"
   hero_portrait_cutout: "/images/obrenovic-hero-transparent.png"
   hero_overlay: 0.55
@@ -101,21 +101,12 @@ services:
       de: "Behandlung von Kiefergelenksproblemen und funktionellen Beschwerden."
 
 gallery:
-  - image: "/gallery/practice1.jpg"
+  - image: "/gallery/chair.jpg"
     alt:
-      de: "Praxisräume – Eindruck 1"
-  - image: "/gallery/practice2.jpg"
+      de: "Wartebereich – ruhige Atmosphäre"
+  - image: "/gallery/practice6.jpg"
     alt:
-      de: "Praxisräume – Eindruck 2"
-  - image: "/gallery/practice3.jpg"
-    alt:
-      de: "Praxisräume – Eindruck 3"
-  - image: "/gallery/practice4.jpg"
-    alt:
-      de: "Praxisräume – Eindruck 4"
-  - image: "/gallery/practice5.jpg"
-    alt:
-      de: "Praxisräume – Eindruck 5"
+      de: "Praxisdetail – sauber und beruhigend"
 
 team:
   show: true
