@@ -44,16 +44,7 @@ function desktopGridClass() {
 {viewport === 'mobile' ? (
   <section class="min-h-[100dvh] w-full bg-white/60 dark:bg-neutral-900 px-6 py-12 flex items-start">
     <div class="w-full mx-auto max-w-sm">
-      <div class="text-center">
-        <h2 class="text-2xl font-bold tracking-tight" data-animate>
-          {ui.heading[lang] ?? ui.heading.en}
-        </h2>
-        <p class="mt-2 text-sm text-slate-600 dark:text-white/60" data-animate>
-          {ui.subtitle[lang] ?? ui.subtitle.en}
-        </p>
-      </div>
-
-      <div class="mt-6 space-y-3" data-animate>
+      <div class="space-y-3" data-animate>
         {members.map((m) => (
           <article class="relative rounded-2xl bg-white border border-black/10 dark:bg-white/5 dark:border-white/10 px-4 py-3">
             <div class="flex flex-col items-center text-center">
