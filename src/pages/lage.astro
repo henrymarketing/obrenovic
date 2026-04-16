@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { config } from '../utils/config';
+
+const lang = config.i18n.default;
+
+const title = `Lage & Anfahrt – ${config.business.name}`;
+const description =
+  'So finden Sie uns: Praxis Schulhausstrasse 37 in Erlenbach ZH, mit ÖV (S6/S16, Bus 962) und Auto. Nur wenige Minuten vom Bahnhof Erlenbach.';
+
+/** ÖV-Fahrplan (SBB) — externer Link für „hier“ */
+const fahrplanHref = 'https://www.sbb.ch/de/kaufen/pages/fahrplan/fahrplan.xhtml';
+const mapsHref = `https://www.google.com/maps?q=${encodeURIComponent(
+  `${config.location.street}, ${config.location.zip} ${config.location.city}`
+)}`;
+---
+
+<BaseLayout lang={lang} title={title} description={description} canonicalPath="/lage">
+  <main id="content" class="min-h-screen px-6 py-16">
+    <div class="mx-auto max-w-2xl">
+      <h1 class="text-3xl md:text-4xl font-bold tracking-tight">So finden Sie uns</h1>
+
+      <div class="mt-10 space-y-6 text-slate-700 dark:text-white/70 leading-relaxed">
+        <p>
+          Unsere Praxis liegt an der Schulhausstrasse 37, einige Minuten vom Bahnhof Erlenbach entfernt. Die Fahrt mit
+          der S6 oder der S16 vom Hauptbahnhof Zürich dauert 15 Minuten. Die Bushaltestelle &quot;Kirchgemeindehaus&quot;
+          der Linie 962 befindet sich direkt vor dem Haus.
+        </p>
+
+        <p>
+          Mit dem Auto dauert die Fahrt von Zürich ca. 10 min. Kundenparkplätze sind vorhanden.
+        </p>
+
+        <p>
+          Einen Lageplan mit den Fahrplänen der öffentlichen Verkehrsmittel finden Sie{' '}
+          <a
+            href={fahrplanHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-semibold text-slate-900 underline decoration-slate-400 underline-offset-2 hover:decoration-slate-600 dark:text-white dark:decoration-white/40 dark:hover:decoration-white/70"
+          >
+            hier
+          </a>
+          .
+        </p>
+      </div>
+
+      <div class="mt-10 rounded-3xl bg-white border border-black/10 dark:bg-white/6 dark:border-white/10 p-6">
+        <div class="text-sm font-semibold text-slate-900 dark:text-white/85">Adresse</div>
+        <div class="mt-2 text-slate-700 dark:text-white/70">
+          {config.location.street}
+          <br />
+          {config.location.zip} {config.location.city}
+        </div>
+        <a
+          href={mapsHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-primary mt-4 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white"
+        >
+          <i data-lucide="map-pin" class="h-4 w-4" aria-hidden="true"></i>
+          Route in Google Maps
+        </a>
+      </div>
+
+      <div class="mt-10 flex flex-wrap gap-4 text-sm">
+        <a class="text-slate-700 hover:underline dark:text-white/70" href="/">
+          ← Zur Startseite
+        </a>
+        <a class="text-slate-700 hover:underline dark:text-white/70" href="/zahnarzt-zuerich-erlenbach">
+          Zahnarzt Zürich & Erlenbach →
+        </a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>

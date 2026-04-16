@@ -1,0 +1,177 @@
+business:
+  name: "Dr. med. Dr. med. dent. Roman Obrenovic"
+  legal_name: "Zahnarztpraxis Dr. med. Dr. med. dent. Roman Obrenovic"
+  slogan:
+    de: "Ihr Zahnarzt im Haus Blume, Erlenbach, Zürich"
+  founded: 2009
+  uid: ""
+  logo: "/logo_obrenovic.png"
+  favicon: "/favicon_obrenovic/favicon.ico"
+
+i18n:
+  default: "de"
+  available: ["de"]
+
+contact:
+  phone: "+41 44 910 00 05"
+  phone_display: "044 910 00 05"
+  email: "info@drobrenovic.ch"
+  whatsapp: null
+  website: "https://www.drobrenovic.ch"
+
+location:
+  street: "Schulhausstrasse 37"
+  zip: "8703"
+  city: "Erlenbach"
+  canton: "ZH"
+  country: "CH"
+  geo:
+    lat: 47.3026
+    lng: 8.5964
+  google_maps_embed: "https://www.google.com/maps?q=Schulhausstrasse%2037%2C%208703%20Erlenbach&output=embed"
+  google_place_id: ""
+
+hours:
+  - days: "Mo-Fr"
+    time: "09:00-12:00, 13:00-17:00"
+
+appointment_note:
+  de: "Termine nach Vereinbarung"
+emergency:
+  enabled: false
+  phone: ""
+
+theme:
+  primary: "#5B6F98"
+  secondary: "#60A5FA"
+  bg_mode: "light"
+  card_style: "glass"
+  site_bg: "/images/orchidee.jpg"
+  hero_bg: "/gallery/reception.jpg"
+  hero_portrait: "/images/obrenovic-hero.jpg"
+  hero_portrait_cutout: "/images/obrenovic-hero-transparent.png"
+  hero_overlay: 0.55
+  border_radius: "1.5rem"
+  font: "Inter"
+
+reviews:
+  average: 4.2
+  count: 5
+  source: "Google"
+
+trust:
+  reasons:
+    - de: "Über 20 Jahre Erfahrung in allgemeiner und rekonstruktiver Zahnmedizin"
+    - de: "Doppelter Doktortitel — medizinisch und zahnmedizinisch"
+    - de: "Persönliche Betreuung in ruhiger Praxis am Zürichsee"
+    - de: "Moderne Behandlungsmethoden und hochwertige Materialien"
+    - de: "Einfühlsame Beratung — auch für Angstpatienten"
+  certifications:
+    - "Dr. med."
+    - "Dr. med. dent."
+    - "eidg. dipl. Zahnarzt"
+  memberships: []
+
+services:
+  - icon: "scan-search"
+    title:
+      de: "Kontrolle & Mundgesundheit"
+    description:
+      de: "Sorgfältige Kontrollen und Beratung für langfristig gesunde Zähne."
+  - icon: "droplets"
+    title:
+      de: "Professionelle Zahnreinigung"
+    description:
+      de: "Gründliche Reinigung und Prophylaxe – sanft und effektiv."
+  - icon: "diamond"
+    title:
+      de: "Implantate"
+    description:
+      de: "Moderne Implantologie – individuell geplant und begleitet."
+  - icon: "hand"
+    title:
+      de: "Kiefergelenk & Beschwerden"
+    description:
+      de: "Behandlung von Kiefergelenksproblemen und funktionellen Beschwerden."
+
+gallery:
+  - image: "/gallery/practice1.jpg"
+    alt:
+      de: "Praxisräume – Eindruck 1"
+  - image: "/gallery/practice2.jpg"
+    alt:
+      de: "Praxisräume – Eindruck 2"
+  - image: "/gallery/practice3.jpg"
+    alt:
+      de: "Praxisräume – Eindruck 3"
+  - image: "/gallery/practice4.jpg"
+    alt:
+      de: "Praxisräume – Eindruck 4"
+  - image: "/gallery/practice5.jpg"
+    alt:
+      de: "Praxisräume – Eindruck 5"
+
+team:
+  show: true
+  members:
+    - name: "Roman Obrenovic"
+      role:
+        de: "Dr. med. Dr. med. dent., eidg. dipl. Zahnarzt"
+      image: "/images/team/roman-obrenovic.jpg"
+    - name: "Sabrina Mathys"
+      role:
+        de: "dipl. DA"
+      image: "/images/team/sabrina-mathys.jpg"
+
+faq: []
+
+cta:
+  primary:
+    de: "Termin anfragen"
+  secondary:
+    de: "Anrufen"
+  action: "email"
+  email:
+    subject:
+      de: "Terminanfrage"
+    body:
+      de: |-
+        Guten Tag
+
+        Ich möchte gerne einen Termin anfragen.
+
+        Name:
+        Telefon:
+        Wunschtermin:
+
+        Nachricht:
+
+cards:
+  - "hero"
+  - "services"
+  - "trust"
+  - "gallery"
+  - "team"
+  - "contact"
+
+seo:
+  title:
+    de: "Dr. med. Dr. med. dent. Roman Obrenovic – Ihr Zahnarzt in Erlenbach ZH"
+  description:
+    de: "Zahnarztpraxis in Erlenbach ZH: allgemeine und rekonstruktive Zahnmedizin – von der Kontrolle über die professionelle Zahnreinigung bis zu Implantaten und Kiefergelenksbehandlungen."
+  keywords:
+    de: ["Zahnarzt Erlenbach", "Zahnarztpraxis Erlenbach", "Zürichsee Zahnarzt", "Zahnreinigung", "Implantate"]
+  og_image: "/og.jpg"
+  schema_type: "Dentist"
+  service_area:
+    - "Erlenbach"
+    - "Küsnacht"
+    - "Zollikon"
+    - "Herrliberg"
+    - "Zürich"
+
+analytics:
+  google:
+    # GA4 / Google Ads via gtag.js. Example: "G-XXXXXXXXXX"
+    gtag_id: ""
+

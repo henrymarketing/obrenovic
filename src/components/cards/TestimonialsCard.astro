@@ -1,0 +1,117 @@
+---
+import { config, t } from '../../utils/config';
+import StarRating from '../ui/StarRating.astro';
+
+export interface Props {
+  lang: string;
+  index: number;
+  total: number;
+  viewport: 'mobile' | 'desktop';
+}
+
+const { lang, viewport } = Astro.props;
+
+const ui = {
+  heading: {
+    de: 'Bewertungen',
+    fr: 'Avis',
+    it: 'Recensioni',
+    en: 'Testimonials',
+  } as Record<string, string>,
+  subtitle: {
+    de: `★ ${config.reviews.average.toFixed(1)}/5 auf ${config.reviews.source}`,
+    fr: `★ ${config.reviews.average.toFixed(1)}/5 sur ${config.reviews.source}`,
+    it: `★ ${config.reviews.average.toFixed(1)}/5 su ${config.reviews.source}`,
+    en: `★ ${config.reviews.average.toFixed(1)}/5 on ${config.reviews.source}`,
+  } as Record<string, string>,
+};
+---
+
+{viewport === 'mobile' ? (
+  <section class="w-full px-6 py-16">
+    <div class="mx-auto max-w-sm text-center">
+      <h2 class="text-2xl font-bold tracking-tight" data-animate>
+        {ui.heading[lang] ?? ui.heading.en}
+      </h2>
+    </div>
+
+    <div class="mt-10">
+      <div class="swiper testimonials-swiper" data-animate>
+        <div class="swiper-wrapper">
+          {config.testimonials.map((r) => (
+            <div class="swiper-slide">
+              <article class="rounded-2xl bg-white border border-black/10 dark:bg-white/5 dark:border-white/10 p-6">
+                <StarRating rating={r.rating} size="sm" />
+                <blockquote class="mt-3 text-sm italic text-slate-700 dark:text-white/80">
+                  “{t(r.text, lang)}”
+                </blockquote>
+                <div class="mt-4 text-sm font-semibold">{r.name}</div>
+                <div class="text-xs text-slate-600 dark:text-white/60">{r.location}</div>
+              </article>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <script is:inline>
+      (() => {
+        if (window.innerWidth >= 768) return;
+        const el = document.querySelector('.testimonials-swiper');
+        if (!el) return;
+        import('swiper/bundle').then(({ default: Swiper }) => {
+          // eslint-disable-next-line no-new
+          new Swiper(el, {
+            slidesPerView: 1.15,
+            centeredSlides: true,
+            spaceBetween: 12,
+          });
+        });
+      })();
+    </script>
+  </section>
+) : (
+  <section class="w-full py-20">
+    <div class="mx-auto max-w-6xl px-8">
+      <div class="text-center">
+        <h2 class="text-4xl font-bold tracking-tight" data-animate>
+          {ui.heading[lang] ?? ui.heading.en}
+        </h2>
+        <p class="mt-3 text-slate-600 dark:text-white/60" data-animate>
+          {ui.subtitle[lang] ?? ui.subtitle.en}
+        </p>
+      </div>
+
+      <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+        {config.testimonials.map((r, i) => {
+          const initial = (r.name || '?').trim().slice(0, 1).toUpperCase();
+          return (
+            <article
+              class="group rounded-2xl bg-white border border-black/10 dark:bg-white/5 dark:border-white/10 p-7 transition-all duration-300 hover:bg-slate-50 hover:border-black/20 hover:shadow-xl dark:hover:bg-white/10 dark:hover:border-white/20"
+              data-animate
+              style={`transition-delay: ${i * 70}ms;`}
+            >
+              <StarRating rating={r.rating} size="sm" />
+              <blockquote class="mt-4 text-lg italic text-slate-700 dark:text-white/80">
+                “{t(r.text, lang)}”
+              </blockquote>
+              <div class="mt-6 flex items-center gap-3">
+                <div
+                  class="btn-primary flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white"
+                  aria-hidden="true"
+                >
+                  {initial}
+                </div>
+                <div>
+                  <div class="font-semibold">{r.name}</div>
+                  <div class="text-sm text-slate-600 dark:text-white/60">{r.location}</div>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+)}
+

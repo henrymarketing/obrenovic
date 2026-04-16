@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { config } from '../utils/config';
+
+const lang = config.i18n.default;
+---
+
+<BaseLayout lang={lang} title="Impressum" canonicalPath="/impressum">
+  <main id="content" class="min-h-screen px-6 py-16">
+    <div class="mx-auto max-w-2xl">
+      <h1 class="text-3xl font-bold tracking-tight">Impressum</h1>
+
+      <div class="mt-8 space-y-6 text-slate-700 dark:text-white/70">
+        <section class="rounded-2xl bg-white border border-black/10 dark:bg-white/5 dark:border-white/10 p-6">
+          <div class="font-semibold text-slate-900 dark:text-white">{config.business.name}</div>
+          <div class="mt-2">
+            {config.location.street}<br />
+            {config.location.zip} {config.location.city}<br />
+            Schweiz
+          </div>
+          <div class="mt-4">
+            <a class="hover:underline" href={`tel:${config.contact.phone}`}>{config.contact.phone_display}</a><br />
+            <a class="hover:underline" href={`mailto:${config.contact.email}`}>{config.contact.email}</a>
+          </div>
+        </section>
+
+        <section class="rounded-2xl bg-white border border-black/10 dark:bg-white/5 dark:border-white/10 p-6">
+          <div class="font-semibold text-slate-900 dark:text-white">Haftungsausschluss</div>
+          <p class="mt-2 text-sm leading-relaxed">
+            Die Inhalte dieser Website werden mit Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität
+            der Inhalte übernehmen wir jedoch keine Gewähr.
+          </p>
+          <p class="mt-3 text-sm leading-relaxed">
+            Für Inhalte externer Links übernehmen wir keine Haftung. Für den Inhalt der verlinkten Seiten sind
+            ausschliesslich deren Betreiber verantwortlich.
+          </p>
+        </section>
+      </div>
+    </div>
+  </main>
+</BaseLayout>

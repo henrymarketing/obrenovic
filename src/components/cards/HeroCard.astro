@@ -1,0 +1,285 @@
+---
+import { config, t } from '../../utils/config';
+import SwipeIndicator from '../ui/SwipeIndicator.astro';
+
+export interface Props {
+  lang: string;
+  index: number;
+  total: number;
+  viewport: 'mobile' | 'desktop';
+}
+
+const { lang, viewport } = Astro.props;
+
+const primaryLabel = t(config.cta.primary, lang);
+const secondaryLabel = t(config.cta.secondary, lang);
+
+function getCtaHref(action: string) {
+  if (action === 'whatsapp' && config.contact.whatsapp) return `https://wa.me/${config.contact.whatsapp.replace(/\+/g, '')}`;
+  if (action === 'email') return buildMailtoHref();
+  if (action === 'url' && config.cta.url) return config.cta.url;
+  return `tel:${config.contact.phone}`;
+}
+
+function buildMailtoHref() {
+  const subject = config.cta.email?.subject?.[lang] || config.cta.email?.subject?.[config.i18n.default] || 'Terminanfrage';
+  const body =
+    config.cta.email?.body?.[lang] ||
+    config.cta.email?.body?.[config.i18n.default] ||
+    `Guten Tag\\n\\nIch möchte gerne einen Termin anfragen.\\n\\nName: \\nTelefon: \\nWunschtermin: \\n\\nNachricht: \\n`;
+  const qs = `subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  return `mailto:${config.contact.email}?${qs}`;
+}
+
+const mailHrefTemplate = buildMailtoHref();
+const mailHrefPlain = `mailto:${config.contact.email}`;
+const desktopPrimaryHref = config.cta.action === 'email' ? mailHrefTemplate : getCtaHref(config.cta.action);
+const phoneHref = `tel:${config.contact.phone}`;
+
+const portraitSrc = config.theme.hero_portrait_cutout || config.theme.hero_portrait || '';
+const primaryIcon = config.cta.action === 'email' ? 'mail' : config.cta.action === 'phone' ? 'calendar' : 'arrow-right';
+
+const mapsHref = `https://www.google.com/maps?q=${encodeURIComponent(
+  `${config.location.street}, ${config.location.zip} ${config.location.city}`
+)}`;
+
+---
+
+{viewport === 'mobile' ? (
+  <section
+    class="relative h-[100dvh] w-full overflow-hidden flex items-center justify-center safe-bottom"
+    aria-label={config.business.name}
+  >
+    <div
+      class="absolute inset-0 bg-white dark:bg-neutral-950"
+      style={`opacity: ${config.theme.hero_overlay};`}
+    />
+
+    <div class="relative z-10 w-full px-6">
+      <div class="mx-auto max-w-sm text-center">
+        <img
+          src={config.business.logo}
+          alt={`${config.business.name} Logo`}
+          class="mx-auto h-16 w-auto max-w-[85%] object-contain"
+          width="1200"
+          height="221"
+          loading="eager"
+          decoding="async"
+        />
+
+        <h1 class="mt-6 text-3xl font-bold tracking-tight" data-animate>
+          {t(config.business.slogan, lang)}
+        </h1>
+
+        <div class="mt-5 rounded-2xl bg-white/75 border border-black/10 backdrop-blur dark:bg-black/25 dark:border-white/10 p-4 text-sm text-slate-700 dark:text-white/70 text-left" data-animate>
+          <a
+            href={mapsHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block font-medium text-slate-900 hover:text-slate-950 dark:text-white/85 dark:hover:text-white"
+            aria-label={`Adresse auf Google Maps öffnen: ${config.location.street}, ${config.location.zip} ${config.location.city}`}
+          >
+            <span class="inline-flex items-start gap-2">
+              <span aria-hidden="true">📍</span>
+              <span>
+                {config.location.street}<br />
+                {config.location.zip}{' '}{config.location.city}
+              </span>
+            </span>
+          </a>
+          <div class="mt-3 flex flex-col gap-1.5">
+            <a
+              href={phoneHref}
+              class="inline-flex items-center gap-2 hover:text-slate-900 dark:hover:text-white"
+              aria-label={`Anrufen: ${config.contact.phone_display}`}
+            >
+              <i data-lucide="phone" class="h-4 w-4" aria-hidden="true"></i>
+              <span class="font-medium">{config.contact.phone_display}</span>
+            </a>
+            <a
+              href={mailHrefPlain}
+              class="inline-flex items-center gap-2 hover:text-slate-900 dark:hover:text-white"
+              aria-label={`E-Mail senden an: ${config.contact.email}`}
+            >
+              <i data-lucide="mail" class="h-4 w-4" aria-hidden="true"></i>
+              <span class="font-medium">{config.contact.email}</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="mt-8" data-animate>
+          <a
+            href={phoneHref}
+            class="btn-primary inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-0.5"
+          >
+            <i data-lucide="phone" class="mr-2 h-4 w-4" aria-hidden="true"></i>
+            {secondaryLabel}
+          </a>
+        </div>
+
+        <div class="mt-4" data-animate>
+          <a href={mailHrefPlain} class="text-sm text-slate-600 hover:text-slate-900 dark:text-white/60 dark:hover:text-white">
+            <i data-lucide="mail" class="mr-1 inline-block h-4 w-4 align-[-2px]" aria-hidden="true"></i>
+            {primaryLabel}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <SwipeIndicator lang={lang} />
+  </section>
+) : (
+  <section class="relative w-full py-20">
+    <div class="mx-auto max-w-6xl px-8">
+      <div class="mb-6 flex items-center justify-between gap-6">
+        <img
+          src={config.business.logo}
+          alt={`${config.business.name} Logo`}
+          class="h-12 w-auto max-w-[280px] object-contain"
+          width="1200"
+          height="221"
+          loading="eager"
+          decoding="async"
+        />
+        <div class="flex items-center gap-3">
+          <a
+            href={desktopPrimaryHref}
+            class="btn-primary inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-0.5"
+          >
+            <i data-lucide="mail" class="mr-2 h-4 w-4" aria-hidden="true"></i>
+            {primaryLabel}
+          </a>
+          <a
+            href={phoneHref}
+            class="inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold bg-white hover:bg-slate-50 text-slate-900 border border-black/10 hover:border-black/20 transition-all duration-300 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:border-white/10 dark:hover:border-white/20"
+          >
+            <i data-lucide="phone" class="mr-2 h-4 w-4" aria-hidden="true"></i>
+            {secondaryLabel}
+          </a>
+        </div>
+      </div>
+
+      <div
+        class:list={[
+          'relative overflow-hidden rounded-[var(--card-radius)] border border-black/10 dark:border-white/10',
+          config.theme.card_style === 'glass' ? 'card-glass' : 'bg-white/5',
+        ]}
+      >
+        <div class="absolute inset-0">
+          <img
+            src={config.theme.hero_bg}
+            alt={config.business.name}
+            class="h-full w-full object-cover"
+            width="1200"
+            height="800"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+          <div
+            class="absolute inset-0 bg-white dark:bg-neutral-950"
+            style={`opacity: ${config.theme.hero_overlay};`}
+          />
+        </div>
+
+        <div class="relative z-10 px-10 py-20 min-h-[640px]">
+          {portraitSrc ? (
+            <div class="pointer-events-none absolute bottom-0 right-0 hidden lg:block" aria-hidden="true">
+              <img
+                src={portraitSrc}
+                alt=""
+                class="h-[630px] w-auto max-w-none object-contain object-bottom opacity-95 translate-x-[186px]"
+                width="1200"
+                height="802"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+          ) : null}
+          <div class="max-w-2xl">
+            <h1 class="text-5xl font-bold tracking-tight" data-animate>
+              {t(config.business.slogan, lang)}
+            </h1>
+
+            <div class="mt-8 flex flex-col gap-3 w-full max-w-sm" data-animate>
+              <a
+                href={mapsHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group rounded-2xl bg-white/75 border border-black/10 backdrop-blur px-5 py-4 shadow-sm hover:shadow-md hover:bg-white/85 hover:border-black/20 transition-all dark:bg-black/25 dark:border-white/10 dark:hover:bg-black/35 dark:hover:border-white/20"
+                aria-label={`Adresse auf Google Maps öffnen: ${config.location.street}, ${config.location.zip} ${config.location.city}`}
+              >
+                <div class="flex items-center justify-between gap-4">
+                  <div class="text-xs font-semibold tracking-wide text-slate-500 dark:text-white/55">
+                    Adresse
+                  </div>
+                  <i data-lucide="map-pin" class="h-4 w-4 text-slate-500/80 dark:text-white/55" aria-hidden="true"></i>
+                </div>
+                <div class="mt-1 text-sm font-semibold text-slate-900 dark:text-white/85 leading-snug">
+                  {config.location.street}
+                </div>
+                <div class="text-sm font-semibold text-slate-900 dark:text-white/85 leading-snug">
+                  {config.location.zip}{' '}{config.location.city}
+                </div>
+                <div class="mt-2 text-xs text-slate-500 dark:text-white/55 group-hover:text-slate-600 dark:group-hover:text-white/65">
+                  In Google Maps öffnen
+                </div>
+              </a>
+
+              <a
+                href={phoneHref}
+                class="group flex items-center gap-3 rounded-2xl bg-white/75 border border-black/10 backdrop-blur px-4 py-3 shadow-sm hover:shadow-md hover:bg-white/85 hover:border-black/20 transition-all dark:bg-black/25 dark:border-white/10 dark:hover:bg-black/35 dark:hover:border-white/20"
+                aria-label={`Anrufen: ${config.contact.phone_display}`}
+              >
+                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-black/5 dark:bg-white/10">
+                  <i data-lucide="phone" class="h-4 w-4 text-slate-600 dark:text-white/70" aria-hidden="true"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-white/55">
+                    Telefon
+                  </div>
+                  <div class="truncate text-sm font-semibold text-slate-900 dark:text-white/85">
+                    {config.contact.phone_display}
+                  </div>
+                </div>
+              </a>
+
+              <a
+                href={mailHrefPlain}
+                class="group flex items-center gap-3 rounded-2xl bg-white/75 border border-black/10 backdrop-blur px-4 py-3 shadow-sm hover:shadow-md hover:bg-white/85 hover:border-black/20 transition-all dark:bg-black/25 dark:border-white/10 dark:hover:bg-black/35 dark:hover:border-white/20"
+                aria-label={`E-Mail senden an: ${config.contact.email}`}
+              >
+                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-black/5 dark:bg-white/10">
+                  <i data-lucide="mail" class="h-4 w-4 text-slate-600 dark:text-white/70" aria-hidden="true"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-white/55">
+                    E‑Mail
+                  </div>
+                  <div class="truncate text-sm font-semibold text-slate-900 dark:text-white/85">
+                    {config.contact.email}
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <button
+            class="absolute bottom-6 left-1/2 hidden md:block -translate-x-1/2 text-center"
+            type="button"
+            data-scroll-next
+            aria-label="Scroll to next section"
+          >
+            <div class="text-xs text-slate-600 dark:text-white/60">Scroll</div>
+            <div class="mx-auto mt-1 w-5 animate-bounce-gentle text-slate-600 dark:text-white/60" aria-hidden="true">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 5v14m0 0l-6-6m6 6l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+

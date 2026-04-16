@@ -1,0 +1,122 @@
+---
+import { config, t } from '../../utils/config';
+
+export interface Props {
+  lang: string;
+  index: number;
+  total: number;
+  viewport: 'mobile' | 'desktop';
+}
+
+const { lang, viewport } = Astro.props;
+
+const ui = {
+  heading: {
+    de: 'FAQ',
+    fr: 'FAQ',
+    it: 'FAQ',
+    en: 'FAQ',
+  } as Record<string, string>,
+  subtitle: {
+    de: 'Häufige Fragen — kurz beantwortet.',
+    fr: 'Questions fréquentes — réponses rapides.',
+    it: 'Domande frequenti — risposte rapide.',
+    en: 'Common questions — answered briefly.',
+  } as Record<string, string>,
+  noAnswer: {
+    de: 'Noch eine Frage?',
+    fr: 'Une autre question ?',
+    it: 'Un’altra domanda?',
+    en: 'Still have a question?',
+  } as Record<string, string>,
+  contact: {
+    de: 'Kontakt aufnehmen',
+    fr: 'Nous contacter',
+    it: 'Contatto',
+    en: 'Contact us',
+  } as Record<string, string>,
+};
+---
+
+{viewport === 'mobile' ? (
+  <section class="w-full bg-white/60 dark:bg-neutral-900 px-6 py-16">
+    <div class="mx-auto max-w-sm text-center">
+      <h2 class="text-2xl font-bold tracking-tight" data-animate>
+        {ui.heading[lang] ?? ui.heading.en}
+      </h2>
+    </div>
+
+    <div class="mx-auto mt-10 max-w-sm max-h-[60vh] overflow-y-auto pr-2" data-animate style="scrollbar-width: thin;">
+      <div class="space-y-3">
+        {config.faq.map((item, i) => (
+          <details class="group rounded-xl bg-white border border-black/10 dark:bg-white/5 dark:border-white/10 p-4">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-3 font-semibold">
+              <span class="text-sm">{t(item.question, lang)}</span>
+              <span
+                class="inline-flex h-7 w-7 items-center justify-center rounded-full text-slate-700 transition-transform duration-300 group-open:rotate-45 dark:bg-white/10 dark:text-white/70"
+                aria-hidden="true"
+                style="background: color-mix(in srgb, var(--color-secondary) 14%, transparent);"
+              >
+                +
+              </span>
+            </summary>
+            <div class="mt-3 text-sm text-slate-600 dark:text-white/60">{t(item.answer, lang)}</div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+) : (
+  <section class="w-full py-20 bg-white/60 dark:bg-neutral-900">
+    <div class="mx-auto max-w-6xl px-8">
+      <div class="grid grid-cols-1 gap-10 md:grid-cols-2 items-start">
+        <div class="md:sticky md:top-20">
+          <h2 class="text-4xl font-bold tracking-tight" data-animate>
+            {ui.heading[lang] ?? ui.heading.en}
+          </h2>
+          <p class="mt-3 text-slate-600 dark:text-white/60" data-animate>
+            {ui.subtitle[lang] ?? ui.subtitle.en}
+          </p>
+
+          <div class="mt-10 rounded-2xl bg-white border border-black/10 dark:bg-white/5 dark:border-white/10 p-6" data-animate>
+            <div class="font-semibold">{ui.noAnswer[lang] ?? ui.noAnswer.en}</div>
+            <p class="mt-2 text-sm text-slate-600 dark:text-white/60">
+              {config.contact.phone_display} · {config.contact.email}
+            </p>
+            <a
+              href={`tel:${config.contact.phone}`}
+              class="btn-primary mt-4 inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold text-white transition-transform duration-300 hover:-translate-y-0.5"
+            >
+              {ui.contact[lang] ?? ui.contact.en}
+            </a>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          {config.faq.map((item, i) => (
+            <details
+              class="group rounded-2xl bg-white border border-black/10 dark:bg-white/5 dark:border-white/10 p-6"
+              data-animate
+              style={`transition-delay: ${i * 60}ms;`}
+            >
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-semibold">
+                <span>{t(item.question, lang)}</span>
+                <span
+                  class="inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-700 transition-transform duration-300 group-open:rotate-45 dark:bg-white/10 dark:text-white/70"
+                  aria-hidden="true"
+                  style="background: color-mix(in srgb, var(--color-secondary) 14%, transparent);"
+                >
+                  +
+                </span>
+              </summary>
+              <div class="mt-4 border-t border-black/10 pt-4 text-slate-700 dark:border-white/10 dark:text-white/70">
+                {t(item.answer, lang)}
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+

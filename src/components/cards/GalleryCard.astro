@@ -1,0 +1,132 @@
+---
+import { config, t } from '../../utils/config';
+
+export interface Props {
+  lang: string;
+  index: number;
+  total: number;
+  viewport: 'mobile' | 'desktop';
+}
+
+const { lang, viewport } = Astro.props;
+
+const ui = {
+  heading: {
+    de: 'Praxis',
+    fr: 'Galerie',
+    it: 'Galleria',
+    en: 'Gallery',
+  } as Record<string, string>,
+  count: {
+    de: `${config.gallery.length} Bilder`,
+    fr: `${config.gallery.length} projets`,
+    it: `${config.gallery.length} progetti`,
+    en: `${config.gallery.length} projects`,
+  } as Record<string, string>,
+};
+
+const count = config.gallery.length;
+const desktopLayout = count <= 3 ? 'grid3' : count <= 5 ? 'grid6' : 'masonry';
+---
+
+{viewport === 'mobile' ? (
+  <section class="min-h-[100dvh] w-full px-6 py-12 flex items-center">
+    <div class="w-full mx-auto max-w-sm">
+      <h2 class="sr-only">{ui.heading[lang] ?? ui.heading.en}</h2>
+
+      <div
+        class="-mx-6 px-6 overflow-x-auto"
+        data-animate
+        style="scrollbar-width: thin;"
+      >
+        <div class="flex gap-4 snap-x snap-mandatory">
+          {config.gallery.map((g) => (
+            <div class="snap-start shrink-0 w-[92vw] max-w-[480px]">
+              <div class="overflow-hidden rounded-3xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/5">
+                <img
+                  src={g.image}
+                  alt={t(g.alt, lang)}
+                  class="aspect-[4/3] w-full object-cover"
+                  width="800"
+                  height="600"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          ))}
+          <div class="shrink-0 w-4" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+) : (
+  <section class="w-full py-20">
+    <div class="mx-auto max-w-6xl px-8">
+      <h2 class="sr-only">{ui.heading[lang] ?? ui.heading.en}</h2>
+
+      {desktopLayout === 'grid3' ? (
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {config.gallery.map((g) => (
+            <div class="group" data-animate>
+              <div class="overflow-hidden rounded-2xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/5">
+                <img
+                  src={g.image}
+                  alt={t(g.alt, lang)}
+                  class="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  width="800"
+                  height="600"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : desktopLayout === 'grid6' ? (
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-6">
+          {config.gallery.map((g, i) => {
+            const span = i === 0 || i === 3 ? 'md:col-span-3' : 'md:col-span-2';
+            return (
+              <div class:list={['group', span]} data-animate>
+                <div class="overflow-hidden rounded-2xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/5">
+                  <img
+                    src={g.image}
+                    alt={t(g.alt, lang)}
+                    class="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    width="800"
+                    height="600"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div class="columns-1 gap-6 md:columns-2 lg:columns-3">
+          {config.gallery.map((g, i) => (
+            <div class="mb-6 break-inside-avoid group" data-animate style={`transition-delay: ${i * 60}ms;`}>
+              <div class="overflow-hidden rounded-2xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/5">
+                <img
+                  src={g.image}
+                  alt={t(g.alt, lang)}
+                  class:list={[
+                    'w-full object-cover transition-transform duration-300 group-hover:scale-105',
+                    i % 2 === 0 ? 'aspect-[4/3]' : 'aspect-[3/4]',
+                  ]}
+                  width="800"
+                  height={i % 2 === 0 ? '600' : '1067'}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+)}
+

@@ -1,0 +1,21 @@
+---
+interface Props {
+  rating: number;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { rating, size = 'md' } = Astro.props;
+const rounded = Math.round(Math.max(0, Math.min(5, rating)));
+
+const sizeClass =
+  size === 'sm' ? 'text-sm' : size === 'lg' ? 'text-lg' : 'text-base';
+---
+
+<span
+  class:list={[sizeClass, 'text-amber-400 leading-none tracking-tight']}
+  role="img"
+  aria-label={`${rating.toFixed(1)} out of 5 stars`}
+>
+  {Array.from({ length: 5 }).map((_, i) => (i < rounded ? '★' : '☆')).join('')}
+</span>
+

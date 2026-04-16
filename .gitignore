@@ -20,5 +20,8 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
+# Cursor agent workspace metadata
+.cursor/
+
 # jetbrains setting folder
 .idea/

@@ -1,0 +1,311 @@
+---
+import { config, t } from '../utils/config';
+import { generateFaqSchema, generateLocalBusinessSchema } from '../utils/seo';
+import LanguageSwitcher from '../components/ui/LanguageSwitcher.astro';
+import ControlCenter from '../components/ui/ControlCenter.astro';
+import '../styles/global.css';
+
+interface Props {
+  lang: string;
+  title?: string;
+  description?: string;
+  keywords?: string[];
+  canonicalPath?: string;
+  lockScroll?: boolean;
+}
+
+const { lang, canonicalPath } = Astro.props;
+const lockScroll = Astro.props.lockScroll === true;
+const title = Astro.props.title ?? t(config.seo.title, lang);
+const description = Astro.props.description ?? t(config.seo.description, lang);
+const keywords =
+  Astro.props.keywords ?? (config.seo.keywords?.[lang] ?? config.seo.keywords?.[config.i18n.default] ?? []);
+
+const origin = config.contact.website.replace(/\/$/, '');
+const canonicalUrl = `${origin}${canonicalPath ?? (lang === config.i18n.default ? '/' : `/${lang}/`)}`;
+
+const ogLocale = `${lang}_CH`;
+const themeColor = config.theme.primary;
+const geoRegion = `CH-${config.location.canton}`;
+const geoPosition = `${config.location.geo.lat};${config.location.geo.lng}`;
+
+const localBusinessSchema = generateLocalBusinessSchema(lang);
+const faqSchema = config.faq?.length ? generateFaqSchema(lang) : null;
+
+const gtagId = (config as any)?.analytics?.google?.gtag_id as string | undefined;
+
+const siteBg = config.theme.site_bg || '';
+---
+
+<!doctype html>
+<html
+  lang={lang}
+  class:list={['h-full', lockScroll ? 'md:overflow-hidden' : '', config.theme.bg_mode === 'dark' ? 'dark' : '']}
+  style={`--color-primary:${config.theme.primary};--color-secondary:${config.theme.secondary};--card-radius:${config.theme.border_radius};--hero-overlay:${config.theme.hero_overlay};`}
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {keywords.length ? <meta name="keywords" content={keywords.join(', ')} /> : null}
+
+    <link rel="icon" href={config.business.favicon} sizes="any" />
+    <link rel="icon" type="image/png" href="/favicon_obrenovic/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/favicon_obrenovic/favicon-16x16.png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="/favicon_obrenovic/apple-touch-icon.png" />
+    <link rel="canonical" href={canonicalUrl} />
+
+    {config.i18n.available.map((l) => {
+      const href = l === config.i18n.default ? `${origin}/` : `${origin}/${l}/`;
+      return <link rel="alternate" hreflang={l} href={href} />;
+    })}
+    <link rel="alternate" hreflang="x-default" href={`${origin}/`} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={`${origin}${config.seo.og_image}`} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:site_name" content={config.business.name} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="geo.region" content={geoRegion} />
+    <meta name="geo.placename" content={config.location.city} />
+    <meta name="geo.position" content={geoPosition} />
+    <meta name="ICBM" content={geoPosition} />
+
+    <meta name="theme-color" content={themeColor} />
+
+    {siteBg ? (
+      <link rel="preload" as="image" href={siteBg} fetchpriority="high" />
+    ) : (
+      <link rel="preload" as="image" href={config.theme.hero_bg} fetchpriority="high" />
+    )}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    </noscript>
+
+    {gtagId ? (
+      <>
+        <script is:inline define:vars={{ gtagId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('consent', 'default', {
+            ad_storage: 'denied',
+            analytics_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+          });
+          gtag('js', new Date());
+          gtag('config', gtagId, { anonymize_ip: true });
+        </script>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`}></script>
+      </>
+    ) : null}
+
+    <script is:inline>
+      try {
+        var theme = localStorage.getItem('theme');
+        if (theme === 'dark') document.documentElement.classList.add('dark');
+        if (theme === 'light') document.documentElement.classList.remove('dark');
+      } catch(e) {}
+    </script>
+
+    <script type="application/ld+json" set:html={JSON.stringify(localBusinessSchema)} />
+    {faqSchema ? <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} /> : null}
+  </head>
+
+  <body
+    class:list={[
+      'h-full text-slate-900 dark:text-white antialiased font-sans relative',
+      siteBg ? '' : 'bg-slate-50 dark:bg-gradient-to-b dark:from-slate-950 dark:to-slate-900',
+      lockScroll ? 'md:overflow-hidden' : '',
+    ]}
+  >
+    {siteBg ? (
+      <div class="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
+        <img
+          src={siteBg}
+          alt=""
+          class="h-full w-full min-h-[100dvh] object-cover"
+          width="1920"
+          height="1080"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <div class="absolute inset-0 bg-white/88 dark:bg-slate-950/88" />
+      </div>
+    ) : null}
+
+    <div class="relative z-10 min-h-full">
+      <a
+        href="#content"
+        class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[70] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-neutral-900"
+      >
+        Skip to content
+      </a>
+
+      <LanguageSwitcher lang={lang} />
+      <ControlCenter lang={lang} />
+
+      <slot />
+
+    <script>
+      import { createIcons, icons } from 'lucide';
+
+      function initLucideIcons() {
+        try {
+          createIcons({ icons });
+        } catch (e) {
+          console.error('[lucide] createIcons failed', e);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initLucideIcons);
+      } else {
+        initLucideIcons();
+      }
+    </script>
+
+    <script is:inline>
+      (function() {
+        var html = document.documentElement;
+
+        function openModal() {
+          var modal = document.getElementById('cc-prefs-modal');
+          if (!modal) return;
+          modal.classList.remove('hidden');
+          try {
+            var prefs = JSON.parse(localStorage.getItem('cookiePrefs') || '{}');
+            var cb = modal.querySelector('[data-cc-analytics]');
+            if (cb) cb.checked = !!prefs.analytics;
+          } catch(e) {}
+        }
+        function closeModal() {
+          var modal = document.getElementById('cc-prefs-modal');
+          if (modal) modal.classList.add('hidden');
+        }
+        function showBanner() {
+          var b = document.getElementById('cc-cookie-banner');
+          if (b) b.classList.remove('hidden');
+        }
+        function hideBanner() {
+          var b = document.getElementById('cc-cookie-banner');
+          if (b) b.classList.add('hidden');
+        }
+        function toggleTheme() {
+          var isDark = html.classList.toggle('dark');
+          try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch(e) {}
+        }
+        function applyConsent(on) {
+          try {
+            if (typeof gtag === 'function') {
+              var v = on ? 'granted' : 'denied';
+              gtag('consent', 'update', {
+                ad_storage: v, analytics_storage: v,
+                ad_user_data: v, ad_personalization: v
+              });
+            }
+          } catch(e) {}
+        }
+        function savePrefs() {
+          var on = false;
+          try {
+            var modal = document.getElementById('cc-prefs-modal');
+            var cb = modal ? modal.querySelector('[data-cc-analytics]') : null;
+            on = cb ? cb.checked : false;
+            localStorage.setItem('cookiePrefs', JSON.stringify({ analytics: on }));
+            localStorage.setItem('ccOnboarded', '1');
+          } catch(e) {}
+          applyConsent(on);
+          hideBanner();
+          closeModal();
+          showSettingsBtn();
+        }
+        function acceptEssential() {
+          try {
+            localStorage.setItem('cookiePrefs', JSON.stringify({ analytics: false }));
+            localStorage.setItem('ccOnboarded', '1');
+          } catch(e) {}
+          applyConsent(false);
+          hideBanner();
+          closeModal();
+          showSettingsBtn();
+        }
+        function acceptAll() {
+          try {
+            localStorage.setItem('cookiePrefs', JSON.stringify({ analytics: true }));
+            localStorage.setItem('ccOnboarded', '1');
+          } catch(e) {}
+          applyConsent(true);
+          hideBanner();
+          closeModal();
+          showSettingsBtn();
+        }
+
+        function showSettingsBtn() {
+          var btn = document.getElementById('cc-settings-btn');
+          if (btn) btn.classList.remove('hidden');
+        }
+
+        // Show cookie banner on first visit, or show settings button if already consented
+        try {
+          if (localStorage.getItem('ccOnboarded') !== '1') {
+            showBanner();
+          } else {
+            showSettingsBtn();
+          }
+        } catch(e) {}
+
+        // Apply saved consent on load
+        try {
+          var saved = JSON.parse(localStorage.getItem('cookiePrefs') || '{}');
+          applyConsent(!!saved.analytics);
+        } catch(e) {}
+
+        // Manual parentElement walk to find [data-cc-action] — no .closest() dependency
+        document.addEventListener('click', function(e) {
+          var el = e.target;
+          while (el && el !== document) {
+            if (el.getAttribute && el.getAttribute('data-cc-action')) {
+              var action = el.getAttribute('data-cc-action');
+              e.stopPropagation();
+              if (action === 'prefs') { openModal(); return; }
+              if (action === 'close') { closeModal(); return; }
+              if (action === 'save-prefs') { savePrefs(); return; }
+              if (action === 'theme') { toggleTheme(); return; }
+              if (action === 'accept-essential') { acceptEssential(); return; }
+              if (action === 'accept-all') { acceptAll(); return; }
+            }
+            el = el.parentElement;
+          }
+        }, true);
+
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') closeModal();
+        });
+      })();
+    </script>
+    </div>
+  </body>
+</html>

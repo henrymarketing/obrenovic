@@ -1,0 +1,199 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { config, t } from '../utils/config';
+
+const lang = config.i18n.default;
+
+const title = `Zahnarzt für Zürich & Erlenbach – ${config.business.name}`;
+const description =
+  'Zahnarztpraxis in Erlenbach ZH (Zürichsee) – gut erreichbar aus Zürich. Termine nach Vereinbarung. Kontakt, Lageplan und Leistungen auf einen Blick.';
+
+const appointmentNote = t(config.appointment_note ?? { de: 'Termine nach Vereinbarung' }, lang);
+const mapsHref = `https://www.google.com/maps?q=${encodeURIComponent(
+  `${config.location.street}, ${config.location.zip} ${config.location.city}`
+)}`;
+
+function buildMailtoHref() {
+  const subject = config.cta.email?.subject?.[lang] || config.cta.email?.subject?.[config.i18n.default] || 'Terminanfrage';
+  const body = config.cta.email?.body?.[lang] || config.cta.email?.body?.[config.i18n.default] || '';
+  const params = new URLSearchParams({ subject, body });
+  return `mailto:${config.contact.email}?${params.toString()}`;
+}
+
+const mailHref = buildMailtoHref();
+
+const faq = [
+  {
+    q: 'Sind Termine auch für Patienten aus Zürich möglich?',
+    a: 'Ja. Unsere Praxis in Erlenbach ZH ist gut erreichbar aus Zürich und der Zürichsee-Region. Termine nach Vereinbarung.',
+  },
+  {
+    q: 'Wie vereinbare ich einen Termin?',
+    a: 'Am schnellsten telefonisch oder per E‑Mail. Beschreiben Sie kurz Ihr Anliegen, dann finden wir gemeinsam einen passenden Termin.',
+  },
+  {
+    q: 'Welche Leistungen bieten Sie an?',
+    a: 'Von Kontrollen und Prophylaxe über Implantate bis zu Beschwerden rund um das Kiefergelenk. Eine Übersicht finden Sie auf der Leistungsseite.',
+  },
+  {
+    q: 'Wo befindet sich die Praxis?',
+    a: `Im Haus Blume, ${config.location.street}, ${config.location.zip} ${config.location.city}.`,
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<BaseLayout lang={lang} title={title} description={description} canonicalPath="/zahnarzt-zuerich-erlenbach">
+  <main id="content" class="min-h-screen px-6 py-16">
+    <div class="mx-auto max-w-5xl">
+      <h1 class="text-3xl md:text-4xl font-bold tracking-tight">
+        Zahnarzt für Zürich & Erlenbach
+      </h1>
+      <p class="mt-3 text-slate-700 dark:text-white/70">
+        Ruhige, moderne Zahnmedizin am Zürichsee — in Erlenbach ZH, gut erreichbar aus Zürich.
+      </p>
+      <p class="mt-2 text-sm text-slate-600 dark:text-white/60">
+        {appointmentNote} · <a class="hover:underline" href={mapsHref} target="_blank" rel="noopener noreferrer">Route in Google Maps</a>
+      </p>
+
+      <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <a
+          href={mapsHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="rounded-3xl bg-white border border-black/10 dark:bg-white/6 dark:border-white/10 p-6 hover:bg-slate-50 hover:border-black/20 transition-colors dark:hover:bg-white/10 dark:hover:border-white/20"
+          aria-label={`Adresse auf Google Maps öffnen: ${config.location.street}, ${config.location.zip} ${config.location.city}`}
+        >
+          <div class="text-xs text-slate-500 dark:text-white/55">Adresse</div>
+          <div class="mt-2 text-base font-semibold text-slate-900 dark:text-white/85 leading-snug">
+            {config.location.street}<br />
+            {config.location.zip} {config.location.city}
+          </div>
+          <div class="mt-3 text-sm text-slate-600 dark:text-white/60">Route öffnen</div>
+        </a>
+
+        <a
+          href={`tel:${config.contact.phone}`}
+          class="rounded-3xl bg-white border border-black/10 dark:bg-white/6 dark:border-white/10 p-6 hover:bg-slate-50 hover:border-black/20 transition-colors dark:hover:bg-white/10 dark:hover:border-white/20"
+          aria-label={`Anrufen: ${config.contact.phone_display}`}
+        >
+          <div class="text-xs text-slate-500 dark:text-white/55">Telefon</div>
+          <div class="mt-3 inline-flex items-center gap-2 text-base font-semibold text-slate-900 dark:text-white/85">
+            <i data-lucide="phone" class="h-4 w-4" aria-hidden="true"></i>
+            {config.contact.phone_display}
+          </div>
+          <div class="mt-3 text-sm text-slate-600 dark:text-white/60">Direkt anrufen</div>
+        </a>
+
+        <a
+          href={mailHref}
+          class="rounded-3xl bg-white border border-black/10 dark:bg-white/6 dark:border-white/10 p-6 hover:bg-slate-50 hover:border-black/20 transition-colors dark:hover:bg-white/10 dark:hover:border-white/20"
+          aria-label={`E-Mail senden an: ${config.contact.email}`}
+        >
+          <div class="text-xs text-slate-500 dark:text-white/55">E‑Mail</div>
+          <div class="mt-3 inline-flex items-center gap-2 text-base font-semibold text-slate-900 dark:text-white/85">
+            <i data-lucide="mail" class="h-4 w-4" aria-hidden="true"></i>
+            {config.contact.email}
+          </div>
+          <div class="mt-3 text-sm text-slate-600 dark:text-white/60">Termin anfragen</div>
+        </a>
+      </div>
+
+      <section class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 items-start">
+        <div class="rounded-3xl bg-white border border-black/10 dark:bg-white/6 dark:border-white/10 p-7">
+          <h2 class="text-xl font-semibold">Gute Erreichbarkeit aus Zürich</h2>
+          <p class="mt-3 text-sm leading-relaxed text-slate-700 dark:text-white/70">
+            Viele Patientinnen und Patienten kommen aus Zürich, Küsnacht, Zollikon, Herrliberg und der Zürichsee-Region.
+            Die Praxis liegt ruhig im Haus Blume in Erlenbach — ideal, wenn Sie Wert auf eine entspannte Behandlung legen.
+          </p>
+          <ul class="mt-5 space-y-2 text-sm text-slate-700 dark:text-white/70">
+            <li><span class="font-semibold text-slate-900 dark:text-white/85">Standort:</span> Erlenbach ZH (Zürichsee)</li>
+            <li><span class="font-semibold text-slate-900 dark:text-white/85">Einzugsgebiet:</span> Zürich & Goldküste</li>
+            <li><span class="font-semibold text-slate-900 dark:text-white/85">Termin:</span> {appointmentNote}</li>
+          </ul>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a
+              class="btn-primary inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white"
+              href="/leistungen"
+            >
+              Leistungen ansehen
+              <i data-lucide="arrow-right" class="h-4 w-4" aria-hidden="true"></i>
+            </a>
+            <a
+              class="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold bg-white hover:bg-slate-50 text-slate-900 border border-black/10 hover:border-black/20 transition-all duration-300 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:border-white/10 dark:hover:border-white/20"
+              href="/dr-roman-obrenovic"
+            >
+              Dr. Obrenovic (CV)
+            </a>
+          </div>
+        </div>
+
+        <div class="rounded-3xl bg-white border border-black/10 dark:bg-white/6 dark:border-white/10 overflow-hidden">
+          <iframe
+            src={config.location.google_maps_embed}
+            title={`${config.business.name} – Google Maps`}
+            class="h-[420px] w-full"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </section>
+
+      <section class="mt-12 rounded-3xl bg-white border border-black/10 dark:bg-white/6 dark:border-white/10 p-7">
+        <h2 class="text-xl font-semibold">Leistungen (Auswahl)</h2>
+        <p class="mt-2 text-sm text-slate-600 dark:text-white/60">
+          Eine kurze Übersicht — Details finden Sie auf der Leistungsseite.
+        </p>
+        <div class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+          {config.services.map((s) => (
+            <div
+              class="rounded-2xl dark:bg-white/10 p-5"
+              style="background: color-mix(in srgb, var(--color-secondary) 14%, transparent);"
+            >
+              <div class="text-sm font-semibold text-slate-900 dark:text-white/85">{t(s.title, lang)}</div>
+              <p class="mt-2 text-sm text-slate-700 dark:text-white/70">
+                {t(s.description, lang)}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="mt-12 rounded-3xl bg-white border border-black/10 dark:bg-white/6 dark:border-white/10 p-7">
+        <h2 class="text-xl font-semibold">FAQ</h2>
+        <div class="mt-6 space-y-4">
+          {faq.map((f) => (
+            <details
+              class="rounded-2xl dark:bg-white/10 p-5"
+              style="background: color-mix(in srgb, var(--color-secondary) 14%, transparent);"
+            >
+              <summary class="cursor-pointer font-semibold text-slate-900 dark:text-white/85">{f.q}</summary>
+              <p class="mt-3 text-sm text-slate-700 dark:text-white/70">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <div class="mt-10 flex flex-wrap items-center gap-4 text-sm">
+        <a class="hover:underline text-slate-700 dark:text-white/70" href="/">
+          ← Zur Startseite
+        </a>
+        <a class="hover:underline text-slate-700 dark:text-white/70" href="/leistungen">
+          Leistungen →
+        </a>
+      </div>
+    </div>
+
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </main>
+</BaseLayout>
+

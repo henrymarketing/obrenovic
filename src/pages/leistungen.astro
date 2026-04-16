@@ -1,0 +1,174 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { config, t } from '../utils/config';
+
+const lang = config.i18n.default;
+
+const title = `Leistungen – ${config.business.name}`;
+const description =
+  'Unsere zahnmedizinischen Leistungen in Erlenbach ZH: Kontrollen, Prophylaxe, Implantate und funktionelle Beschwerden (Kiefergelenk). Termine nach Vereinbarung.';
+
+function buildMailtoHref() {
+  const subject = config.cta.email?.subject?.[lang] || config.cta.email?.subject?.[config.i18n.default] || 'Terminanfrage';
+  const body = config.cta.email?.body?.[lang] || config.cta.email?.body?.[config.i18n.default] || '';
+  const params = new URLSearchParams({ subject, body });
+  return `mailto:${config.contact.email}?${params.toString()}`;
+}
+
+const mailHref = buildMailtoHref();
+
+const serviceDetailsByIcon: Record<
+  string,
+  {
+    bullets: string[];
+    note: string;
+  }
+> = {
+  'scan-search': {
+    bullets: [
+      'Vorsorge & Kontrolle (inkl. Beratung zu Risiken und Gewohnheiten)',
+      'Karies- und Zahnfleisch-Check, auf Wunsch mit schonender Diagnostik',
+      'Individuelle Empfehlungen für zuhause – pragmatisch, ohne Belehrung',
+    ],
+    note: 'Ideal, wenn Sie wieder einen klaren Ausgangspunkt wollen oder schon länger keinen Check hatten.',
+  },
+  droplets: {
+    bullets: [
+      'Entfernung von Belägen und Verfärbungen (Kaffee, Tee, Nikotin)',
+      'Sanfte Reinigung – auch bei empfindlichen Zähnen',
+      'Prophylaxe-Tipps, die in Ihren Alltag passen',
+    ],
+    note: 'Gut vor wichtigen Terminen – oder als ruhige Routine für frischen Atem und gesundes Zahnfleisch.',
+  },
+  diamond: {
+    bullets: [
+      'Beratung bei fehlenden Zähnen: Optionen, Ablauf, Kostenrahmen',
+      'Sorgfältige Planung – mit Blick auf Funktion und Ästhetik',
+      'Begleitung und Kontrolle nach dem Eingriff',
+    ],
+    note: 'Wenn Sie „wieder normal zubeissen“ möchten: Wir klären, ob ein Implantat für Sie sinnvoll ist.',
+  },
+  hand: {
+    bullets: [
+      'Kieferknacken, Pressen/Knirschen, Verspannungen und Kopfschmerzen',
+      'Funktionelle Abklärung – Schritt für Schritt, ohne Schnellschüsse',
+      'Therapieoptionen wie Schiene, Bisskorrektur oder Entlastungskonzepte',
+    ],
+    note: 'Wenn der Kiefer „mitredet“: Je früher wir die Ursache finden, desto einfacher wird die Behandlung.',
+  },
+};
+
+function getServiceDetails(icon: string) {
+  return (
+    serviceDetailsByIcon[icon] ?? {
+      bullets: [],
+      note: 'Schildern Sie kurz Ihr Anliegen — wir empfehlen Ihnen den nächsten Schritt.',
+    }
+  );
+}
+---
+
+<BaseLayout lang={lang} title={title} description={description} canonicalPath="/leistungen">
+  <main id="content" class="min-h-screen px-6 py-16">
+    <div class="mx-auto max-w-5xl">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 class="text-3xl md:text-4xl font-bold tracking-tight">Leistungen</h1>
+          <p class="mt-3 text-slate-700 dark:text-white/70">
+            Sorgfältig, modern, ruhig — mit Fokus auf langfristige Mundgesundheit und klare Entscheidungen.
+          </p>
+          <p class="mt-2 text-sm text-slate-600 dark:text-white/60">
+            {config.location.street}, {config.location.zip} {config.location.city} · {t(config.appointment_note ?? { de: 'Termine nach Vereinbarung' }, lang)}
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <a
+            class="btn-primary inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white shadow-sm"
+            href={mailHref}
+          >
+            <i data-lucide="mail" class="h-4 w-4" aria-hidden="true"></i>
+            Termin anfragen
+          </a>
+          <a
+            class="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold bg-white hover:bg-slate-50 text-slate-900 border border-black/10 hover:border-black/20 transition-all duration-300 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:border-white/10 dark:hover:border-white/20"
+            href={`tel:${config.contact.phone}`}
+          >
+            <i data-lucide="phone" class="h-4 w-4" aria-hidden="true"></i>
+            Anrufen
+          </a>
+        </div>
+      </div>
+
+      <section class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
+        {config.services.map((s) => {
+          const details = getServiceDetails(s.icon);
+          return (
+          <article class="rounded-3xl bg-white border border-black/10 dark:bg-white/6 dark:border-white/10 p-7">
+            <h2 class="text-lg font-semibold">{t(s.title, lang)}</h2>
+            <p class="mt-2 text-sm leading-relaxed text-slate-700 dark:text-white/70">
+              {t(s.description, lang)}
+            </p>
+            {details.bullets.length > 0 && (
+              <div class="mt-4">
+                <div class="text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-white/60">
+                  Typische Anliegen
+                </div>
+                <ul class="mt-2 space-y-1 text-sm text-slate-700 dark:text-white/70">
+                  {details.bullets.map((b) => (
+                    <li class="flex gap-2">
+                      <span class="mt-[0.35rem] h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400/70 dark:bg-white/30"></span>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <p class="mt-4 text-sm text-slate-600 dark:text-white/60">{details.note}</p>
+          </article>
+          );
+        })}
+      </section>
+
+      <section class="mt-12 rounded-3xl bg-white border border-black/10 dark:bg-white/6 dark:border-white/10 p-7">
+        <h2 class="text-xl font-semibold">So läuft die Terminvereinbarung</h2>
+        <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3 text-sm text-slate-700 dark:text-white/70">
+          <div
+            class="rounded-2xl dark:bg-white/10 p-5"
+            style="background: color-mix(in srgb, var(--color-secondary) 14%, transparent);"
+          >
+            <div class="font-semibold text-slate-900 dark:text-white/85">1) Kontakt</div>
+            <p class="mt-2">Rufen Sie an oder schreiben Sie uns eine kurze E‑Mail mit Ihrem Anliegen.</p>
+          </div>
+          <div
+            class="rounded-2xl dark:bg-white/10 p-5"
+            style="background: color-mix(in srgb, var(--color-secondary) 14%, transparent);"
+          >
+            <div class="font-semibold text-slate-900 dark:text-white/85">2) Einschätzung</div>
+            <p class="mt-2">Wir klären, ob Kontrolle, Beratung oder eine konkrete Behandlung sinnvoll ist.</p>
+          </div>
+          <div
+            class="rounded-2xl dark:bg-white/10 p-5"
+            style="background: color-mix(in srgb, var(--color-secondary) 14%, transparent);"
+          >
+            <div class="font-semibold text-slate-900 dark:text-white/85">3) Termin</div>
+            <p class="mt-2">Termine nach Vereinbarung — in ruhiger Atmosphäre und ohne Zeitdruck.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="mt-10 flex flex-wrap items-center gap-4 text-sm">
+        <a class="hover:underline text-slate-700 dark:text-white/70" href="/">
+          ← Zur Startseite
+        </a>
+        <a class="hover:underline text-slate-700 dark:text-white/70" href="/dr-roman-obrenovic">
+          Dr. Obrenovic (CV) →
+        </a>
+        <a class="hover:underline text-slate-700 dark:text-white/70" href="/zahnarzt-zuerich-erlenbach">
+          Zahnarzt für Zürich & Erlenbach →
+        </a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+

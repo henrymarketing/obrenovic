@@ -1,0 +1,172 @@
+---
+import { config } from '../../utils/config';
+
+interface Props {
+  lang: string;
+}
+
+const { lang } = Astro.props;
+
+const labels = {
+  theme: { de: 'Theme', en: 'Theme', fr: 'Thème', it: 'Tema' } as Record<string, string>,
+  cookies: { de: 'Cookies', en: 'Cookies', fr: 'Cookies', it: 'Cookie' } as Record<string, string>,
+  prefs: { de: 'Einstellungen', en: 'Preferences', fr: 'Préférences', it: 'Preferenze' } as Record<string, string>,
+  close: { de: 'Schliessen', en: 'Close', fr: 'Fermer', it: 'Chiudi' } as Record<string, string>,
+  prefsTitle: { de: 'Einstellungen', en: 'Preferences', fr: 'Préférences', it: 'Preferenze' } as Record<string, string>,
+  prefsBody: {
+    de: 'Wählen Sie Anzeige- und Cookie-Einstellungen. Sie können das jederzeit ändern.',
+    en: 'Choose display and cookie preferences. You can change this anytime.',
+    fr: 'Choisissez les préférences d’affichage et de cookies. Vous pouvez les modifier à tout moment.',
+    it: 'Scegli preferenze di visualizzazione e cookie. Puoi modificarle in qualsiasi momento.',
+  } as Record<string, string>,
+  display: { de: 'Anzeige', en: 'Display', fr: 'Affichage', it: 'Display' } as Record<string, string>,
+  cookiesTitle: { de: 'Ihre Privatsphäre', en: 'Your Privacy', fr: 'Votre vie privée', it: 'La vostra privacy' } as Record<string, string>,
+  cookiesBody: {
+    de: 'Wir verwenden Cookies für Statistiken und zur Verbesserung der Website. Sie entscheiden, welche Sie zulassen möchten.',
+    en: 'We use cookies for statistics and to improve the website. You decide which ones to allow.',
+    fr: 'Nous utilisons des cookies pour les statistiques et l\u2019amélioration du site. Vous choisissez lesquels autoriser.',
+    it: 'Utilizziamo cookie per statistiche e miglioramento del sito. Decidete voi quali consentire.',
+  } as Record<string, string>,
+  essential: { de: 'Notwendig', en: 'Essential', fr: 'Essentiels', it: 'Essenziali' } as Record<string, string>,
+  analytics: { de: 'Statistik', en: 'Analytics', fr: 'Statistiques', it: 'Statistiche' } as Record<string, string>,
+  acceptEssential: { de: 'Nur notwendig', en: 'Essential only', fr: 'Essentiels seulement', it: 'Solo essenziali' } as Record<string, string>,
+  acceptAll: { de: 'Alle akzeptieren', en: 'Accept all', fr: 'Tout accepter', it: 'Accetta tutto' } as Record<string, string>,
+  save: { de: 'Speichern', en: 'Save', fr: 'Enregistrer', it: 'Salva' } as Record<string, string>,
+};
+
+const t = (r: Record<string, string>) => r[lang] ?? r[config.i18n.default] ?? Object.values(r)[0] ?? '';
+---
+
+<div id="cc-settings-btn" class="fixed bottom-4 left-4 z-[9999] pointer-events-auto hidden">
+  <div class="hidden md:flex items-center gap-2">
+    <button
+      type="button"
+      class="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white/85 border border-black/10 px-4 shadow-lg shadow-black/10 backdrop-blur-sm text-xs font-semibold text-slate-900 hover:bg-white dark:bg-black/45 dark:border-white/10 dark:text-white dark:hover:bg-black/55 transition-colors"
+      data-cc-action="prefs"
+      aria-controls="cc-prefs-modal"
+      aria-haspopup="dialog"
+      aria-label={t(labels.prefs)}
+      title={t(labels.prefs)}
+    >
+      <i data-lucide="sliders-horizontal" class="h-4 w-4" aria-hidden="true"></i>
+      {t(labels.prefs)}
+    </button>
+  </div>
+
+  <button
+    type="button"
+    class="md:hidden inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/90 border border-black/10 shadow-lg shadow-black/10 backdrop-blur-sm dark:bg-black/50 dark:border-white/10"
+    data-cc-action="prefs"
+    aria-controls="cc-prefs-modal"
+    aria-haspopup="dialog"
+    aria-label={t(labels.prefs)}
+    title={t(labels.prefs)}
+  >
+    <i data-lucide="sliders-horizontal" class="h-5 w-5" aria-hidden="true"></i>
+  </button>
+</div>
+
+<div
+  id="cc-prefs-modal"
+  class="fixed inset-0 z-[10000] hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="cc-prefs-title"
+>
+  <div class="absolute inset-0 bg-black/30 dark:bg-black/60" data-cc-action="close"></div>
+  <div class="relative mx-auto mt-24 w-[min(560px,calc(100vw-2rem))] rounded-3xl bg-white border border-black/10 p-6 shadow-2xl dark:bg-neutral-950 dark:border-white/10">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <div id="cc-prefs-title" class="text-lg font-semibold tracking-tight">
+          {t(labels.prefsTitle)}
+        </div>
+        <p class="mt-2 text-sm text-slate-600 dark:text-white/60">
+          {t(labels.prefsBody)}
+        </p>
+      </div>
+      <button
+        type="button"
+        class="rounded-full px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-black/5 dark:text-white/70 dark:hover:bg-white/10"
+        data-cc-action="close"
+      >
+        {t(labels.close)}
+      </button>
+    </div>
+
+    <div class="mt-6 space-y-3">
+      <div class="text-sm font-semibold">{t(labels.display)}</div>
+      <div class="grid grid-cols-1 gap-3">
+        <button type="button" class="rounded-2xl bg-slate-50 border border-black/10 p-4 text-left dark:bg-white/5 dark:border-white/10" data-cc-action="theme">
+          <div class="font-semibold">{t(labels.theme)}</div>
+          <div class="mt-1 text-sm text-slate-600 dark:text-white/60">Light / Dark</div>
+        </button>
+      </div>
+
+      <div class="pt-2 text-sm font-semibold">{t(labels.cookies)}</div>
+      <div class="flex items-center justify-between rounded-2xl bg-slate-50 border border-black/10 p-4 dark:bg-white/5 dark:border-white/10">
+        <div>
+          <div class="font-semibold">{t(labels.essential)}</div>
+          <div class="text-sm text-slate-600 dark:text-white/60">Immer aktiv</div>
+        </div>
+        <div class="text-sm font-semibold text-slate-500 dark:text-white/40">On</div>
+      </div>
+
+      <label class="flex items-center justify-between rounded-2xl bg-slate-50 border border-black/10 p-4 dark:bg-white/5 dark:border-white/10">
+        <div>
+          <div class="font-semibold">{t(labels.analytics)}</div>
+          <div class="text-sm text-slate-600 dark:text-white/60">Optional</div>
+        </div>
+        <input type="checkbox" class="h-5 w-5 accent-[var(--color-primary)]" data-cc-analytics />
+      </label>
+    </div>
+
+    <div class="mt-6 flex items-center justify-end gap-3">
+      <button
+        type="button"
+        class="rounded-full px-5 py-2.5 text-sm font-semibold text-white"
+        style={`background:${config.theme.primary};`}
+        data-cc-action="save-prefs"
+      >
+        {t(labels.save)}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
+  id="cc-cookie-banner"
+  class="fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:bottom-6 md:max-w-sm z-[9998] hidden"
+  role="region"
+  aria-label={t(labels.cookies)}
+>
+  <div class="rounded-2xl bg-white/95 backdrop-blur-md border border-black/8 shadow-lg shadow-black/8 p-5 dark:bg-neutral-950/95 dark:border-white/10">
+    <p class="text-[13px] leading-relaxed text-slate-600 dark:text-white/60">
+      <span class="font-semibold text-slate-900 dark:text-white">{t(labels.cookiesTitle)}</span>{' '}&mdash;{' '}{t(labels.cookiesBody)}
+    </p>
+    <div class="mt-3 flex items-center gap-2">
+      <button
+        type="button"
+        class="rounded-full px-4 py-2 text-xs font-semibold text-white transition-colors"
+        style={`background:${config.theme.primary};`}
+        data-cc-action="accept-all"
+      >
+        OK
+      </button>
+      <button
+        type="button"
+        class="rounded-full px-4 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors dark:bg-white/10 dark:text-white dark:hover:bg-white/15"
+        data-cc-action="accept-essential"
+      >
+        {t(labels.acceptEssential)}
+      </button>
+      <button
+        type="button"
+        class="ml-auto text-xs text-slate-400 hover:text-slate-700 dark:text-white/30 dark:hover:text-white/60 transition-colors"
+        data-cc-action="prefs"
+      >
+        <i data-lucide="sliders-horizontal" class="h-3.5 w-3.5" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</div>
+

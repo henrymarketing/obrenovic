@@ -1,16 +1,19 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { config } from '../utils/config';
-import HeroCard from '../components/cards/HeroCard.astro';
-import ServicesCard from '../components/cards/ServicesCard.astro';
-import TrustCard from '../components/cards/TrustCard.astro';
-import GalleryCard from '../components/cards/GalleryCard.astro';
-import TestimonialsCard from '../components/cards/TestimonialsCard.astro';
-import TeamCard from '../components/cards/TeamCard.astro';
-import FaqCard from '../components/cards/FaqCard.astro';
-import ContactCard from '../components/cards/ContactCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { config } from '../../utils/config';
+import HeroCard from '../../components/cards/HeroCard.astro';
+import ServicesCard from '../../components/cards/ServicesCard.astro';
+import TrustCard from '../../components/cards/TrustCard.astro';
+import GalleryCard from '../../components/cards/GalleryCard.astro';
+import TestimonialsCard from '../../components/cards/TestimonialsCard.astro';
+import TeamCard from '../../components/cards/TeamCard.astro';
+import FaqCard from '../../components/cards/FaqCard.astro';
+import ContactCard from '../../components/cards/ContactCard.astro';
 
-const lang = config.i18n.default;
+const lang = 'it';
+if (!config.i18n.available.includes(lang)) {
+  return Astro.redirect('/');
+}
 
 const activeCards = (config.cards ?? []).filter((c) => c !== 'team' || config.team.show);
 const total = activeCards.length;
@@ -26,36 +29,20 @@ const cardMap: Record<string, any> = {
   contact: ContactCard,
 };
 
-const cardLabels: Record<string, string> = {
-  hero: 'Start',
-  services: 'Leistungen',
-  trust: 'Warum wir',
-  gallery: 'Praxis',
-  testimonials: 'Bewertungen',
-  team: 'Team',
-  faq: 'FAQ',
-  contact: 'Kontakt',
-};
-
-function buildMailtoHref() {
-  const subject = config.cta.email?.subject?.[lang] || config.cta.email?.subject?.[config.i18n.default] || 'Terminanfrage';
-  const body = config.cta.email?.body?.[lang] || config.cta.email?.body?.[config.i18n.default] || '';
-  const qs = `subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  return `mailto:${config.contact.email}?${qs}`;
-}
-
 function getCtaHref() {
   if (config.cta.action === 'whatsapp' && config.contact.whatsapp) {
     return `https://wa.me/${config.contact.whatsapp.replace(/\+/g, '')}`;
   }
-  if (config.cta.action === 'email') return buildMailtoHref();
+  if (config.cta.action === 'email') return `mailto:${config.contact.email}`;
   if (config.cta.action === 'url' && config.cta.url) return config.cta.url;
   return `tel:${config.contact.phone}`;
 }
 
 const floatingHref = getCtaHref();
+const canonicalPath = '/it/';
 ---
-<BaseLayout lang={lang} canonicalPath="/" lockScroll={true}>
+
+<BaseLayout lang={lang} canonicalPath={canonicalPath} lockScroll={true}>
   <main id="content" class="md:hidden">
     <div class="swiper swiper-vertical h-[100dvh]" id="mobile-swiper">
       <div class="swiper-wrapper">
@@ -76,30 +63,17 @@ const floatingHref = getCtaHref();
     {activeCards.map((name, index) => {
       const Card = cardMap[name];
       return (
-        <section
-          class="min-h-screen flex items-center justify-center"
-          data-card={name}
-          data-index={index}
-        >
+        <section class="min-h-screen flex items-center justify-center" data-card={name} data-index={index}>
           <Card lang={lang} index={index} total={total} viewport="desktop" />
         </section>
       );
     })}
 
-    <div
-      id="desktop-dots"
-      class="fixed right-6 top-1/2 -translate-y-1/2 z-[55] flex flex-col gap-3"
-      aria-label="Section navigation"
-    >
+    <div id="desktop-dots" class="fixed right-6 top-1/2 -translate-y-1/2 z-[55] flex flex-col gap-3" aria-label="Section navigation">
       {activeCards.map((name, i) => (
-        <button
-          class="group relative h-2.5 w-2.5 rounded-full bg-black/20 hover:bg-black/40 dark:bg-white/20 dark:hover:bg-white/40 transition-colors duration-300"
-          data-dot={i}
-          aria-label={cardLabels[name] || name}
-          type="button"
-        >
-          <span class="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-white/80 text-slate-900 border border-black/10 dark:bg-black/50 dark:text-white/80 dark:border-white/10 px-3 py-1 text-xs opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            {cardLabels[name] || name}
+        <button class="group relative h-2.5 w-2.5 rounded-full bg-white/20 hover:bg-white/40 transition-colors duration-300" data-dot={i} aria-label={name} type="button">
+          <span class="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-black/50 px-3 py-1 text-xs text-white/80 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            {name}
           </span>
         </button>
       ))}
@@ -109,9 +83,8 @@ const floatingHref = getCtaHref();
   <a
     id="floating-cta"
     href={floatingHref}
-    class="btn-primary hidden md:inline-flex items-center gap-2 fixed bottom-6 left-1/2 -translate-x-1/2 z-[55] rounded-full px-6 py-3 text-sm font-semibold text-white opacity-0 translate-y-4 pointer-events-none transition-all duration-300 shadow-lg shadow-black/10"
+    class="btn-primary fixed bottom-6 left-1/2 -translate-x-1/2 z-[55] rounded-full px-6 py-3 text-sm font-semibold text-white opacity-0 translate-y-4 pointer-events-none transition-all duration-300"
   >
-    <i data-lucide="mail" class="h-4 w-4" aria-hidden="true"></i>
     {config.cta.primary[lang] ?? config.cta.primary[config.i18n.default]}
   </a>
 
@@ -125,7 +98,7 @@ const floatingHref = getCtaHref();
       if (!root) return;
       const nodes = root.querySelectorAll('[data-animate]');
       nodes.forEach((n, i) => {
-        n.style.transitionDelay = `${Math.min(i * 50, 200)}ms`;
+        n.style.transitionDelay = `${Math.min(i * 70, 450)}ms`;
         n.classList.add('animate-in');
       });
     }
@@ -149,14 +122,11 @@ const floatingHref = getCtaHref();
     if (window.innerWidth < 768) {
       const el = document.getElementById('mobile-swiper');
       if (el) {
-        const enableWheel = window.matchMedia && window.matchMedia('(pointer:fine)').matches;
         const swiper = new Swiper(el, {
           modules: [Pagination, Mousewheel, Keyboard, A11y],
           direction: 'vertical',
-          mousewheel: enableWheel ? { forceToAxis: true, releaseOnEdges: true } : false,
+          mousewheel: true,
           keyboard: { enabled: true },
-          touchReleaseOnEdges: true,
-          resistanceRatio: 0.7,
           pagination: { el: '.swiper-pagination', clickable: true },
         });
 
@@ -180,8 +150,6 @@ const floatingHref = getCtaHref();
               setActiveDot(idx);
               handleCardVisibility(idx, sections.length);
               triggerAnimations(entry.target);
-              sections.forEach((s) => s.removeAttribute('data-active'));
-              entry.target.setAttribute('data-active', '1');
             });
           },
           { root, threshold: 0.5 }
@@ -195,18 +163,8 @@ const floatingHref = getCtaHref();
             if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           });
         });
-
-        const scrollNext = document.querySelector('[data-scroll-next]');
-        if (scrollNext) {
-          scrollNext.addEventListener('click', () => {
-            const current = root.querySelector('section[data-index][data-active=\"1\"]');
-            const currentIdx = current ? Number(current.getAttribute('data-index') || '0') : 0;
-            const nextIdx = Math.min(currentIdx + 1, sections.length - 1);
-            const target = root.querySelector(`section[data-index=\"${nextIdx}\"]`);
-            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          });
-        }
       }
     }
   </script>
 </BaseLayout>
+
