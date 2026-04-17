@@ -6,7 +6,7 @@ const lang = config.i18n.default;
 
 const title = `Zahnarzt für Zürich & Erlenbach – ${config.business.name}`;
 const description =
-  'Zahnarztpraxis in Erlenbach ZH (Zürichsee) – gut erreichbar aus Zürich. Termine nach Vereinbarung. Kontakt, Lageplan und Leistungen auf einen Blick.';
+  'Zahnarztpraxis in Erlenbach ZH (Zürichsee) – gut erreichbar aus Zürich. Termine nach Vereinbarung. Kontakt, Lageplan und Behandlungen auf einen Blick.';
 
 const appointmentNote = t(config.appointment_note ?? { de: 'Termine nach Vereinbarung' }, lang);
 const mapsHref = `https://www.google.com/maps?q=${encodeURIComponent(
@@ -22,6 +22,25 @@ function buildMailtoHref() {
 
 const mailHref = buildMailtoHref();
 
+const pageTreatments = [
+  {
+    title: { de: 'Kontrolle & Mundgesundheit' },
+    description: { de: 'Sorgfältige Kontrollen und Beratung für langfristig gesunde Zähne.' },
+  },
+  {
+    title: { de: 'Professionelle Zahnreinigung' },
+    description: { de: 'Gründliche Reinigung und Prophylaxe – sanft und effektiv.' },
+  },
+  {
+    title: { de: 'Implantate' },
+    description: { de: 'Moderne Implantologie – individuell geplant und begleitet.' },
+  },
+  {
+    title: { de: 'Kiefergelenk & Beschwerden' },
+    description: { de: 'Behandlung von Kiefergelenksproblemen und funktionellen Beschwerden.' },
+  },
+];
+
 const faq = [
   {
     q: 'Sind Termine auch für Patienten aus Zürich möglich?',
@@ -32,8 +51,8 @@ const faq = [
     a: 'Am schnellsten telefonisch oder per E‑Mail. Beschreiben Sie kurz Ihr Anliegen, dann finden wir gemeinsam einen passenden Termin.',
   },
   {
-    q: 'Welche Leistungen bieten Sie an?',
-    a: 'Von Kontrollen und Prophylaxe über Implantate bis zu Beschwerden rund um das Kiefergelenk. Eine Übersicht finden Sie auf der Leistungsseite.',
+    q: 'Welche Behandlungen bieten Sie an?',
+    a: 'Von Kontrollen und Prophylaxe über Implantate bis zu Beschwerden rund um das Kiefergelenk. Eine Übersicht finden Sie auf der Behandlungsseite.',
   },
   {
     q: 'Wo befindet sich die Praxis?',
@@ -125,7 +144,7 @@ const faqSchema = {
               class="btn-primary inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white"
               href="/leistungen"
             >
-              Leistungen ansehen
+              Behandlungen ansehen
               <i data-lucide="arrow-right" class="h-4 w-4" aria-hidden="true"></i>
             </a>
             <a
@@ -149,12 +168,12 @@ const faqSchema = {
       </section>
 
       <section class="mt-12 rounded-3xl bg-white border border-black/10 dark:bg-white/6 dark:border-white/10 p-7">
-        <h2 class="text-xl font-semibold">Leistungen (Auswahl)</h2>
+        <h2 class="text-xl font-semibold">Behandlungen (Auswahl)</h2>
         <p class="mt-2 text-sm text-slate-600 dark:text-white/60">
           Eine kurze Übersicht — Details finden Sie auf der Leistungsseite.
         </p>
         <div class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-          {config.services.map((s) => (
+          {pageTreatments.map((s) => (
             <div
               class="rounded-2xl dark:bg-white/10 p-5"
               style="background: color-mix(in srgb, var(--color-secondary) 14%, transparent);"
@@ -188,7 +207,7 @@ const faqSchema = {
           ← Zur Startseite
         </a>
         <a class="hover:underline text-slate-700 dark:text-white/70" href="/leistungen">
-          Leistungen →
+          Behandlungen →
         </a>
       </div>
     </div>

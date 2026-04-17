@@ -4,9 +4,9 @@ import { config, t } from '../utils/config';
 
 const lang = config.i18n.default;
 
-const title = `Leistungen – ${config.business.name}`;
+const title = `Behandlungen – ${config.business.name}`;
 const description =
-  'Unsere zahnmedizinischen Leistungen in Erlenbach ZH: Kontrollen, Prophylaxe, Implantate und funktionelle Beschwerden (Kiefergelenk). Termine nach Vereinbarung.';
+  'Unsere zahnmedizinischen Behandlungen in Erlenbach ZH: Kontrolle, professionelle Zahnreinigung, Implantate und Kiefergelenk-Beschwerden. Termine nach Vereinbarung.';
 
 function buildMailtoHref() {
   const subject = config.cta.email?.subject?.[lang] || config.cta.email?.subject?.[config.i18n.default] || 'Terminanfrage';
@@ -16,6 +16,29 @@ function buildMailtoHref() {
 }
 
 const mailHref = buildMailtoHref();
+
+const pageTreatments = [
+  {
+    icon: 'scan-search',
+    title: { de: 'Kontrolle & Mundgesundheit' },
+    description: { de: 'Sorgfältige Kontrollen und Beratung für langfristig gesunde Zähne.' },
+  },
+  {
+    icon: 'droplets',
+    title: { de: 'Professionelle Zahnreinigung' },
+    description: { de: 'Gründliche Reinigung und Prophylaxe – sanft und effektiv.' },
+  },
+  {
+    icon: 'diamond',
+    title: { de: 'Implantate' },
+    description: { de: 'Moderne Implantologie – individuell geplant und begleitet.' },
+  },
+  {
+    icon: 'hand',
+    title: { de: 'Kiefergelenk & Beschwerden' },
+    description: { de: 'Behandlung von Kiefergelenksproblemen und funktionellen Beschwerden.' },
+  },
+];
 
 const serviceDetailsByIcon: Record<
   string,
@@ -73,7 +96,7 @@ function getServiceDetails(icon: string) {
     <div class="mx-auto max-w-5xl">
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 class="text-3xl md:text-4xl font-bold tracking-tight">Leistungen</h1>
+          <h1 class="text-3xl md:text-4xl font-bold tracking-tight">Behandlungen</h1>
           <p class="mt-3 text-slate-700 dark:text-white/70">
             Sorgfältig, modern, ruhig — mit Fokus auf langfristige Mundgesundheit und klare Entscheidungen.
           </p>
@@ -101,7 +124,7 @@ function getServiceDetails(icon: string) {
       </div>
 
       <section class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
-        {config.services.map((s) => {
+        {pageTreatments.map((s) => {
           const details = getServiceDetails(s.icon);
           return (
           <article class="rounded-3xl bg-white border border-black/10 dark:bg-white/6 dark:border-white/10 p-7">

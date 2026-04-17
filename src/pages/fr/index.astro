@@ -119,52 +119,95 @@ const canonicalPath = '/fr/';
       if (active) active.classList.add('bg-white');
     }
 
-    if (window.innerWidth < 768) {
+    const mqDesktop = window.matchMedia('(min-width: 768px)');
+    let mobileSwiper = null;
+    let desktopInitialized = false;
+
+    function initMobileSwiper() {
       const el = document.getElementById('mobile-swiper');
-      if (el) {
-        const swiper = new Swiper(el, {
-          modules: [Pagination, Mousewheel, Keyboard, A11y],
-          direction: 'vertical',
-          mousewheel: true,
-          keyboard: { enabled: true },
-          pagination: { el: '.swiper-pagination', clickable: true },
-        });
+      if (!el || mobileSwiper) return;
 
-        triggerAnimations(el.querySelector('.swiper-slide-active'));
-        handleCardVisibility(0, swiper.slides.length);
+      mobileSwiper = new Swiper(el, {
+        modules: [Pagination, Mousewheel, Keyboard, A11y],
+        direction: 'vertical',
+        // Avoid jumpiness on mobile; only enable wheel on fine pointers.
+        mousewheel: window.matchMedia && window.matchMedia('(pointer:fine)').matches,
+        keyboard: { enabled: true },
+        threshold: 32,
+        touchAngle: 45,
+        longSwipesRatio: 0.35,
+        longSwipes: false,
+        preventInteractionOnTransition: true,
+        speed: 420,
+        touchStartPreventDefault: false,
+        touchMoveStopPropagation: false,
+        touchReleaseOnEdges: true,
+        resistanceRatio: 0.85,
+        pagination: { el: '.swiper-pagination', clickable: true },
+      });
 
-        swiper.on('slideChange', () => {
-          handleCardVisibility(swiper.activeIndex, swiper.slides.length);
-          triggerAnimations(swiper.slides[swiper.activeIndex]);
-        });
-      }
-    } else {
+      triggerAnimations(el.querySelector('.swiper-slide-active'));
+      handleCardVisibility(0, mobileSwiper.slides.length);
+
+      mobileSwiper.on('slideChange', () => {
+        if (!mobileSwiper) return;
+        handleCardVisibility(mobileSwiper.activeIndex, mobileSwiper.slides.length);
+        triggerAnimations(mobileSwiper.slides[mobileSwiper.activeIndex]);
+      });
+    }
+
+    function destroyMobileSwiper() {
+      if (!mobileSwiper) return;
+      mobileSwiper.destroy(true, true);
+      mobileSwiper = null;
+    }
+
+    function initDesktopScroll() {
+      if (desktopInitialized) return;
       const root = document.getElementById('desktop-scroll');
       const sections = root ? Array.from(root.querySelectorAll('section[data-index]')) : [];
-      if (root && sections.length) {
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (!entry.isIntersecting) return;
-              const idx = Number(entry.target.getAttribute('data-index') || '0');
-              setActiveDot(idx);
-              handleCardVisibility(idx, sections.length);
-              triggerAnimations(entry.target);
-            });
-          },
-          { root, threshold: 0.5 }
-        );
-        sections.forEach((s) => io.observe(s));
+      if (!root || !sections.length) return;
 
-        document.querySelectorAll('[data-dot]').forEach((btn) => {
-          btn.addEventListener('click', () => {
-            const idx = Number(btn.getAttribute('data-dot') || '0');
-            const target = root.querySelector(`section[data-index=\"${idx}\"]`);
-            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      desktopInitialized = true;
+
+      setActiveDot(0);
+      handleCardVisibility(0, sections.length);
+      triggerAnimations(sections[0]);
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const idx = Number(entry.target.getAttribute('data-index') || '0');
+            setActiveDot(idx);
+            handleCardVisibility(idx, sections.length);
+            triggerAnimations(entry.target);
           });
+        },
+        { root, threshold: 0.5 }
+      );
+      sections.forEach((s) => io.observe(s));
+
+      document.querySelectorAll('[data-dot]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const idx = Number(btn.getAttribute('data-dot') || '0');
+          const target = root.querySelector(`section[data-index=\"${idx}\"]`);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
+      });
+    }
+
+    function syncLayoutMode() {
+      if (mqDesktop.matches) {
+        destroyMobileSwiper();
+        initDesktopScroll();
+      } else {
+        initMobileSwiper();
       }
     }
+
+    syncLayoutMode();
+    mqDesktop.addEventListener('change', syncLayoutMode);
   </script>
 </BaseLayout>
 

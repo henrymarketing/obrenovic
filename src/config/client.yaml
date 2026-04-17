@@ -2,10 +2,10 @@ business:
   name: "Dr. med. Dr. med. dent. Roman Obrenovic"
   legal_name: "Zahnarztpraxis Dr. med. Dr. med. dent. Roman Obrenovic"
   slogan:
-    de: "Ihr Zahnarzt im Haus Blume, Erlenbach, Zürich"
+    de: "Ihr Zahnarzt in Erlenbach, Zürich"
   founded: 2009
   uid: ""
-  logo: "/logo_obrenovic.png"
+  logo: "/logo_obrenovic only.png"
   favicon: "/favicon_obrenovic/favicon.ico"
 
 i18n:
@@ -81,29 +81,30 @@ trust:
 services:
   - icon: "scan-search"
     title:
-      de: "Kontrolle & Mundgesundheit"
+      de: "Allgemeine Zahnmedizin"
     description:
-      de: "Sorgfältige Kontrollen und Beratung für langfristig gesunde Zähne."
+      de: "Dentalhygiene und Kontrollen, Schuluntersuchungen sowie Diagnose und Therapie von Erkrankungen an Zahn, Parodont, Mundschleimhaut und Kiefer."
   - icon: "droplets"
     title:
-      de: "Professionelle Zahnreinigung"
+      de: "Rekonstruktive Zahnmedizin"
     description:
-      de: "Gründliche Reinigung und Prophylaxe – sanft und effektiv."
+      de: "Wiederherstellung von Form und Funktion — von Implantattherapien über prothetische Versorgungen bis zu ästhetischen Rekonstruktionen."
   - icon: "diamond"
     title:
-      de: "Implantate"
+      de: "Kaufunktionsstörungen"
     description:
-      de: "Moderne Implantologie – individuell geplant und begleitet."
-  - icon: "hand"
-    title:
-      de: "Kiefergelenk & Beschwerden"
-    description:
-      de: "Behandlung von Kiefergelenksproblemen und funktionellen Beschwerden."
+      de: "Diagnose und Behandlung chronisch orofazialer Schmerzen, Kiefergelenksproblemen und individuell angepassten Schienentherapien."
 
 gallery:
   - image: "/gallery/chair.jpg"
     alt:
       de: "Wartebereich – ruhige Atmosphäre"
+  - image: "/gallery/reception.jpg"
+    alt:
+      de: "Empfang – willkommen in der Praxis"
+  - image: "/gallery/practice4.jpg"
+    alt:
+      de: "Wartebereich – ruhig und angenehm"
   - image: "/gallery/practice6.jpg"
     alt:
       de: "Praxisdetail – sauber und beruhigend"
@@ -147,7 +148,6 @@ cards:
   - "hero"
   - "services"
   - "trust"
-  - "gallery"
   - "team"
   - "contact"
 

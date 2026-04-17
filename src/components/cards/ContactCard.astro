@@ -109,6 +109,9 @@ const appointmentNote = (config as any).appointment_note ? (config as any).appoi
         class="inline-flex flex-col items-center gap-1.5 rounded-2xl bg-white border border-black/10 dark:bg-white/5 dark:border-white/10 px-5 py-4 hover:bg-slate-50 hover:border-black/20 transition-colors dark:hover:bg-white/10 dark:hover:border-white/20"
       >
         <div class="text-base font-semibold text-slate-900 dark:text-white/90">
+          {config.business.name}
+        </div>
+        <div class="text-base font-semibold text-slate-900 dark:text-white/90">
           {config.location.street}
         </div>
         <div class="text-base font-semibold text-slate-900 dark:text-white/90">
@@ -207,9 +210,12 @@ const appointmentNote = (config as any).appointment_note ? (config as any).appoi
                 target="_blank"
                 rel="noopener noreferrer"
                 class="block hover:text-slate-900 dark:hover:text-white"
-                aria-label={`Google Maps: ${config.location.street}, ${config.location.zip} ${config.location.city}`}
+                aria-label={`Google Maps: ${config.business.name}, ${config.location.street}, ${config.location.zip} ${config.location.city}`}
               >
                 <div class="text-lg font-semibold leading-tight text-slate-900 dark:text-white/90">
+                  {config.business.name}
+                </div>
+                <div class="mt-1 text-lg font-semibold leading-tight text-slate-900 dark:text-white/90">
                   {config.location.street}
                 </div>
                 <div class="mt-1 text-lg font-semibold leading-tight text-slate-900 dark:text-white/90">

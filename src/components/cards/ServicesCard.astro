@@ -12,13 +12,13 @@ const { lang, viewport } = Astro.props;
 
 const ui = {
   heading: {
-    de: 'Leistungen',
+    de: 'Behandlungen',
     fr: 'Services',
     it: 'Servizi',
     en: 'Services',
   } as Record<string, string>,
   subtitle: {
-    de: `${config.location.city} · ${t(config.appointment_note ?? { de: 'Termine nach Vereinbarung' }, lang)}`,
+    de: 'Wir nehmen uns Zeit für Sie.',
     fr: `Depuis ${config.business.founded} · ${config.location.city}`,
     it: `Dal ${config.business.founded} · ${config.location.city}`,
     en: `Since ${config.business.founded} · ${config.location.city}`,
@@ -58,7 +58,7 @@ const grid =
           href="/leistungen"
           class="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold bg-white hover:bg-slate-50 text-slate-900 border border-black/10 hover:border-black/20 transition-all duration-300 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:border-white/10 dark:hover:border-white/20"
         >
-          Alle Leistungen ansehen
+          Alle Behandlungen ansehen
           <i data-lucide="arrow-right" class="ml-2 h-4 w-4" aria-hidden="true"></i>
         </a>
       </div>
@@ -92,7 +92,7 @@ const grid =
           href="/leistungen"
           class="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold bg-white hover:bg-slate-50 text-slate-900 border border-black/10 hover:border-black/20 transition-all duration-300 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:border-white/10 dark:hover:border-white/20"
         >
-          Alle Leistungen ansehen
+          Alle Behandlungen ansehen
           <i data-lucide="arrow-right" class="ml-2 h-4 w-4" aria-hidden="true"></i>
         </a>
       </div>
